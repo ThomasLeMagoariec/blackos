@@ -221,7 +221,7 @@ disk_reset:
     ret
 
 msg_hello:              db "Hello, World!", ENDL, 0
-msg_read_failed:        db "[OS] Read from disk failed!", ENDL, 0
+msg_read_failed:        db "Read from disk failed!", ENDL, 0
 
 times 510-($-$$) db 0
 dw 0xAA55
