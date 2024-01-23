@@ -1,0 +1,8 @@
+mkdir -p build
+make -C src/bootloader/stage1 BUILD_DIR=C:\Users\thoma\Documents\_coding\asm\blackos\build
+make[1]: Entering directory '/c/Users/thoma/Documents/_coding/asm/blackos/src/bootloader/stage1'
+make[1]: Nothing to be done for 'all'.
+make[1]: Leaving directory '/c/Users/thoma/Documents/_coding/asm/blackos/src/bootloader/stage1'
+make -C src/bootloader/stage2 BUILD_DIR=C:\Users\thoma\Documents\_coding\asm\blackos\build
+make[1]: Entering directory '/c/Users/thoma/Documents/_coding/asm/blackos/src/bootloader/stage2'
+make[1]: Leaving directory '/c/Users/thoma/Documents/_coding/asm/blackos/src/bootloader/stage2'
