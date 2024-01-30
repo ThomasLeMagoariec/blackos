@@ -1,6 +1,6 @@
 BUILD_DIR?=build/
 ASM?=nasm
-CFLAGS16?=-4 -d3 -s -wx -ms -zl -zq
+CFLAGS16?=-4 -d3 -s -wx -ms -zl -zq -za99
 ASMFLAGS?=-f obj
 CC16?=C:\WATCOM\binnt\wcc.exe
 LD16?=C:\WATCOM\binnt\wlink.exe
