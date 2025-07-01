@@ -1,13 +1,12 @@
 ASM=nasm
 CC=gcc
-CC16=C:/WATCOM/binnt/wcc.exe
-LD16=C:/WATCOM/binnt/wlink.exe
+CC16=wcc
+LD16=wlink
 
 SRC_DIR=src
 TOOLS_DIR=tools
 BUILD_DIR=build
-BASE_DIR=C:\Users\thoma\Documents\_coding\asm\blackos
-
+BASE_DIR=/home/thomas/coding/asm/blackos
 .PHONY: all floppy_image kernel bootloader clean always tools_fat
 
 all: floppy_image tools_fat
@@ -38,12 +37,12 @@ bootloader: stage1 stage2
 stage1: $(BUILD_DIR)/stage1.bin
 
 $(BUILD_DIR)/stage1.bin: always
-	$(MAKE) -C $(SRC_DIR)/bootloader/stage1 BUILD_DIR=$(BASE_DIR)\$(BUILD_DIR)
+	$(MAKE) -C $(SRC_DIR)/bootloader/stage1 BUILD_DIR=$(BASE_DIR)/$(BUILD_DIR)
 
 stage2: $(BUILD_DIR)/stage2.bin
 
 $(BUILD_DIR)/stage2.bin: always
-	$(MAKE) -C $(SRC_DIR)/bootloader/stage2 BUILD_DIR=$(BASE_DIR)\$(BUILD_DIR)
+	$(MAKE) -C $(SRC_DIR)/bootloader/stage2 BUILD_DIR=$(BASE_DIR)/$(BUILD_DIR)
 
 #!
 #! Kernel
