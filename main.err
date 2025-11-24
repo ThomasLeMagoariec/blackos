@@ -1,2 +1,0 @@
-.\src\bootloader\stage2\stdio.h(3): Error! E1009: Expecting ';' but found 'void'
-.\src\bootloader\stage2\main.c(4): Warning! W303: Parameter 'bootDrive' has been defined, but not referenced
