@@ -38,10 +38,10 @@ void handle_scancode(uint8_t scancode) {
         case 0x36: // right shift
             shift_pressed = !released;
             return;
-        case 0x1C:
+        case 0x1C: // enter
             if (!released) printf("\n");
             return;
-        case 0x0E:
+        case 0x0E: // backspace
             if (!released) backspace();
             return;
     }
