@@ -2,4 +2,4 @@
 build/*
 run.sh
 *.err
-.ccls-cache
+.ccls-cache/*
