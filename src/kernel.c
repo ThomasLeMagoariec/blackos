@@ -2,18 +2,18 @@
 #include "irq.h"
 
 void timer(Registers* regs) {
-    printf(".");
+    //printf(".");
 
-    int code;
-    while (code != -1) {
-        code = dequeue_key();
-        if (code != -1) printf("%x", code);
-        else break;
+    int scancode = dequeue_key();
+    if(scancode != -1) {
+        char c = map_scancode(scancode);
+        printf("%c", c); // your terminal output
     }
 }
 
 void irq_keyboard(Registers* regs) {
-    enqueue_key(i686_IRQ_GetBuffer());
+    handle_scancode(i686_IRQ_GetBuffer());
+    //enqueue_key(i686_IRQ_GetBuffer());
 }
 
 void kernel_main() {
@@ -23,6 +23,7 @@ void kernel_main() {
     i686_IRQ_RegisterHandler(0, timer);
     i686_IRQ_RegisterHandler(1, irq_keyboard);
     
+
     printf("Hello, World!\n");
 
     dbg_puts("bite\nZeub");

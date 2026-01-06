@@ -12,6 +12,27 @@ const uint8_t DEFAULT_COLOR = 0x7;
 uint8_t* g_ScreenBuffer = (uint8_t*)0xB8000;
 int g_ScreenX = 0, g_ScreenY = 0;
 
+void backspace()
+{
+    if (g_ScreenX > 0)
+    {
+        g_ScreenX--;
+    }
+    else if (g_ScreenY > 0)
+    {
+        g_ScreenY--;
+        g_ScreenX = SCREEN_WIDTH - 1;
+    }
+    else
+    {
+        return;
+    }
+
+    putchr(g_ScreenX, g_ScreenY, '\0');
+    //putcolor(g_ScreenX, g_ScreenY, DEFAULT_COLOR);
+    setcursor(g_ScreenX, g_ScreenY);
+}
+
 void putchr(int x, int y, char c)
 {
     g_ScreenBuffer[2 * (y * SCREEN_WIDTH + x)] = c;
@@ -91,6 +112,10 @@ void putc(char c)
 
         case '\r':
             g_ScreenX = 0;
+            break;
+
+        case '\b':
+            backspace();
             break;
 
         default:
