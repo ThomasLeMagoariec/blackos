@@ -1,4 +1,5 @@
 #include "keyboard.h"
+#include "shell.h"
 
 #define keymap          keymap_azerty
 #define keymap_shift    keymap_azerty_shift
@@ -73,10 +74,18 @@ void handle_scancode(uint8_t scancode) {
             shift_pressed = !released;
             return;
         case 0x1C: // enter
-            if (!released) printf("\n");
+            if (!released) {
+                printf("\n");
+                handle_input();
+            }
+
             return;
         case 0x0E: // backspace
-            if (!released) backspace();
+            if (!released) {
+                backspace();
+                kb_buf--;
+                g_KeyboardBuffer[kb_buf] = '\0';
+            }
             return;
     }
 

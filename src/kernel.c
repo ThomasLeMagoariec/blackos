@@ -8,10 +8,8 @@ void timer(Registers* regs) {
 
     if (scancode != -1) {
         char c = map_scancode(scancode);
+        printf("%c", c);
     }
-
-    printf("%s", get_kbbuffer());
-    clear_kbbuffer();
 
 
 }
