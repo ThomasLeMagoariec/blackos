@@ -1,11 +1,29 @@
 #include "keyboard.h"
 
+#define keymap          keymap_azerty
+#define keymap_shift    keymap_azerty_shift
+
 uint16_t g_KeyboardBuffer[MAX_KB_SIZE];
 volatile uint8_t kbd_buffer[MAX_KB_SIZE];
 volatile int kb_head = 0;
 volatile int kb_tail = 0;
 
 int shift_pressed = 0;
+
+char keymap_azerty[128] = {
+    0, 27, '&','é','"','\'','(','-','_','_','ç','à',')','=','\b',
+    '\t', 'a','z','e','r','t','y','u','i','o','p','^','$','\n',
+    0, 'q','s','d','f','g','h','j','k','l','m','ù','`', 0,
+    '\\','w','x','c','v','b','n',',',';',':','!', 0, '*', 0, ' '
+};
+
+static const char keymap_azerty_shift[128] = {
+    0, 27, '1','2','3','4','5','6','7','8','9','0','°','+','\b',
+    '\t','A','Z','E','R','T','Y','U','I','O','P','¨','£','\n',
+    0, 'Q','S','D','F','G','H','J','K','L','M','%','~',
+    0, '|','W','X','C','V','B','N','M','?','.','/',
+    0, '*', 0, ' '
+};
 
 char keymap_qwerty[128] = {
     0, 27, '1','2','3','4','5','6','7','8','9','0','-','=','\b',
@@ -23,7 +41,7 @@ static const char keymap_qwerty_shift[128] = {
 };
 
 char map_scancode(uint8_t scancode) {
-    char c = shift_pressed ? keymap_qwerty_shift[scancode] : keymap_qwerty[scancode];
+    char c = shift_pressed ? keymap_shift[scancode] : keymap[scancode];
     if(c >= 'a' && c <= 'z' && shift_pressed) c -= 32; // uppercase
 
     return c;
