@@ -64,6 +64,10 @@ char* get_kbbuffer() {
     return g_KeyboardBuffer;
 }
 
+int get_kbsize() {
+    return kb_buf;
+}
+
 void handle_scancode(uint8_t scancode) {
     int released = scancode & 0x80;
     uint8_t make = scancode & 0x7F;
