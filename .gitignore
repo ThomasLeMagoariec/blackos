@@ -3,3 +3,4 @@ build/*
 run.sh
 *.err
 .ccls-cache/*
+TODO.md
