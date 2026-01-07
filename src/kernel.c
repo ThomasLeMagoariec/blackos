@@ -1,19 +1,23 @@
 #include "kernel.h"
 #include "irq.h"
 
+
 void timer(Registers* regs) {
-    //printf(".");
 
     int scancode = dequeue_key();
-    if(scancode != -1) {
+
+    if (scancode != -1) {
         char c = map_scancode(scancode);
-        printf("%c", c); // your terminal output
     }
+
+    printf("%s", get_kbbuffer());
+    clear_kbbuffer();
+
+
 }
 
 void irq_keyboard(Registers* regs) {
     handle_scancode(i686_IRQ_GetBuffer());
-    //enqueue_key(i686_IRQ_GetBuffer());
 }
 
 void kernel_main() {

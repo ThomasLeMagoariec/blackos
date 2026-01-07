@@ -3,7 +3,9 @@
 #define keymap          keymap_azerty
 #define keymap_shift    keymap_azerty_shift
 
-uint16_t g_KeyboardBuffer[MAX_KB_SIZE];
+char g_KeyboardBuffer[MAX_KB_SIZE];
+uint8_t kb_buf;
+
 volatile uint8_t kbd_buffer[MAX_KB_SIZE];
 volatile int kb_head = 0;
 volatile int kb_tail = 0;
@@ -44,7 +46,21 @@ char map_scancode(uint8_t scancode) {
     char c = shift_pressed ? keymap_shift[scancode] : keymap[scancode];
     if(c >= 'a' && c <= 'z' && shift_pressed) c -= 32; // uppercase
 
+    if (kb_buf < MAX_KB_SIZE)
+      g_KeyboardBuffer[kb_buf++] = c;
+
     return c;
+}
+
+void clear_kbbuffer() {
+    for (uint8_t i = 0; i < 128; i++) {
+        g_KeyboardBuffer[i] = 0;
+    };
+    kb_buf = 0;
+}
+
+char* get_kbbuffer() {
+    return g_KeyboardBuffer;
 }
 
 void handle_scancode(uint8_t scancode) {

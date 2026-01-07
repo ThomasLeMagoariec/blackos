@@ -10,5 +10,7 @@ void enqueue_key(uint8_t scancode);
 int dequeue_key();
 char map_scancode(uint8_t scancode);
 void handle_scancode(uint8_t scancode);
+char* get_kbbuffer();
+void clear_kbbuffer();
 
 #endif
