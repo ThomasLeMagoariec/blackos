@@ -28,6 +28,8 @@ void kernel_main() {
 
     printf("Hello, World!\n");
 
+    printf("> ");
+
     dbg_puts("bite\nZeub");
 
     while (1); // hang
