@@ -80,7 +80,7 @@ void handle_scancode(uint8_t scancode) {
         case 0x1C: // enter
             if (!released) {
                 printf("\n");
-                handle_input();
+                shell_handle_input();
             }
 
             return;
