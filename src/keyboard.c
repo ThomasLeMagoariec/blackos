@@ -43,7 +43,7 @@ static const char keymap_qwerty_shift[128] = {
     0, '*', 0, ' '
 };
 
-char map_scancode(uint8_t scancode) {
+char kb_map_scancode(uint8_t scancode) {
     char c = shift_pressed ? keymap_shift[scancode] : keymap[scancode];
     if(c >= 'a' && c <= 'z' && shift_pressed) c -= 32; // uppercase
 
@@ -53,22 +53,22 @@ char map_scancode(uint8_t scancode) {
     return c;
 }
 
-void clear_kbbuffer() {
+void kb_clear_buffer() {
     for (uint8_t i = 0; i < 128; i++) {
         g_KeyboardBuffer[i] = 0;
     };
     kb_buf = 0;
 }
 
-char* get_kbbuffer() {
+char* kb_get_buffer() {
     return g_KeyboardBuffer;
 }
 
-uint8_t get_kbsize() {
+uint8_t kb_get_size() {
     return kb_buf;
 }
 
-void handle_scancode(uint8_t scancode) {
+void kb_handle_scancode(uint8_t scancode) {
     int released = scancode & 0x80;
     uint8_t make = scancode & 0x7F;
 
@@ -93,11 +93,11 @@ void handle_scancode(uint8_t scancode) {
             return;
     }
 
-    if(!released) enqueue_key(make); // only store key presses
+    if(!released) kb_enqueue_key(make); // only store key presses
 }
 
 
-void enqueue_key(uint8_t scancode) {
+void kb_enqueue_key(uint8_t scancode) {
     int next = (kb_head + 1) % MAX_KB_SIZE;
     if(next != kb_tail) { // buffer not full
         kbd_buffer[kb_head] = scancode;
@@ -105,7 +105,7 @@ void enqueue_key(uint8_t scancode) {
     }
 }
 
-int dequeue_key() {
+int kb_dequeue_key() {
     if(kb_tail == kb_head) return -1; // buffer empty
     int scancode = kbd_buffer[kb_tail];
     kb_tail = (kb_tail + 1) % MAX_KB_SIZE;

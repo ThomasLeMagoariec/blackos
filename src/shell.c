@@ -25,13 +25,13 @@ void shell_add_command_word(const char* word_str, uint8_t len_word) {
 }
 
 void shell_handle_input() {
-    char* buffer = get_kbbuffer();
+    char* buffer = kb_get_buffer();
     char word[256];
     uint8_t len_word = 0;
     
     g_NumWords = 0;
     
-    for (uint8_t i = 0; i < get_kbsize(); i++) {
+    for (uint8_t i = 0; i < kb_get_size(); i++) {
         if (buffer[i] != ' ' && buffer[i] != '\n') {
             if (len_word < 255) word[len_word++] = buffer[i];
         } else {
@@ -56,7 +56,7 @@ void shell_handle_input() {
     }
 
 
-    clear_kbbuffer();
+    kb_clear_buffer();
     printf("\n> ");
 }
 

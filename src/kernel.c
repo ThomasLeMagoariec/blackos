@@ -4,10 +4,10 @@
 
 void timer(Registers* regs) {
 
-    int scancode = dequeue_key();
+    int scancode = kb_dequeue_key();
 
     if (scancode != -1) {
-        char c = map_scancode(scancode);
+        char c = kb_map_scancode(scancode);
         printf("%c", c);
     }
 
@@ -15,7 +15,7 @@ void timer(Registers* regs) {
 }
 
 void irq_keyboard(Registers* regs) {
-    handle_scancode(i686_IRQ_GetBuffer());
+    kb_handle_scancode(i686_IRQ_GetBuffer());
 }
 
 void kernel_main() {

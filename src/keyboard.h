@@ -6,12 +6,12 @@
 
 #define MAX_KB_SIZE 256
 
-void enqueue_key(uint8_t scancode);
-int dequeue_key();
-char map_scancode(uint8_t scancode);
-void handle_scancode(uint8_t scancode);
-char* get_kbbuffer();
-void clear_kbbuffer();
-uint8_t get_kbsize();
+void kb_enqueue_key(uint8_t scancode);
+int kb_dequeue_key();
+char kb_map_scancode(uint8_t scancode);
+void kb_handle_scancode(uint8_t scancode);
+char* kb_get_buffer();
+void kb_clear_buffer();
+uint8_t kb_get_size();
 
 #endif
