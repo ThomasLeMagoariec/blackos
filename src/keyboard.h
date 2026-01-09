@@ -12,6 +12,6 @@ char map_scancode(uint8_t scancode);
 void handle_scancode(uint8_t scancode);
 char* get_kbbuffer();
 void clear_kbbuffer();
-int get_kbsize();
+uint8_t get_kbsize();
 
 #endif
