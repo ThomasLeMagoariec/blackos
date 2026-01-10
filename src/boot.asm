@@ -16,5 +16,7 @@ extern kernel_main
 
 start:
     cli
+    push ebx        ; multiboot_info*
+    push eax        ; multiboot magic
     call kernel_main
     hlt

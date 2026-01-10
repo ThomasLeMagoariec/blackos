@@ -1,6 +1,7 @@
 #include "kernel.h"
 #include "irq.h"
 
+BootParams* g_BootParams;
 
 void timer(Registers* regs) {
 
@@ -18,7 +19,11 @@ void irq_keyboard(Registers* regs) {
     kb_handle_scancode(i686_IRQ_GetBuffer());
 }
 
-void kernel_main() {
+
+void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
+    init_memory_info(mbi, g_BootParams);
+
+
     HAL_Initialize();
 
 
