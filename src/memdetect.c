@@ -1,4 +1,4 @@
-#include "memdetech.h"
+#include "memdetect.h"
 
 #define MAX_REGIONS 256
 
