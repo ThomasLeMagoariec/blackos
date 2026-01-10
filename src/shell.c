@@ -51,6 +51,8 @@ void shell_handle_input() {
 
     if (memcmp(g_CurrentCommand[0], "echo", 4) == 0) {
         shell_handle_echo();
+    }else if (memcmp(g_CurrentCommand[0], "memmap", 6) == 0){
+        print_memmap();
     } else {
         printf("UNDEFINED\n");
     }

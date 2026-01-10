@@ -5,6 +5,17 @@
 MemoryRegion g_MemoryRegions[MAX_REGIONS];
 int g_MemRegionCount;
 
+void print_memmap() {
+    for (int i = 0; i < g_MemRegionCount; i++) {
+        
+        //printf("MEM: base=0x%llx\tlen=0x%llx\ttype=0x%x\n", e->addr, e->len, e->type);
+        printf("MEM: base=0x%llx\tlen=0x%llx\ttype=0x%x\n",
+                g_MemoryRegions[i].Begin,
+                g_MemoryRegions[i].Length,
+                g_MemoryRegions[i].Type);
+    }
+}
+
 int count_memory_regions(struct multiboot_info* mbi) {
     int count = 0;
 
@@ -25,7 +36,7 @@ void init_memory_info(struct multiboot_info* mbi, BootParams* params) {
         return;
     }
 
-    int regionCount = count_memory_regions(mbi);
+    g_MemRegionCount = count_memory_regions(mbi);
 
 
     int i = 0;
@@ -44,9 +55,9 @@ void init_memory_info(struct multiboot_info* mbi, BootParams* params) {
         i++;
         off += e->size + sizeof(e->size);
 
-        printf("MEM: base=0x%llx\tlen=0x%llx\ttype=0x%x\n", e->addr, e->len, e->type);
     }
 
-    params->Memory.RegionCount = regionCount;
+    params->Memory.RegionCount = g_MemRegionCount;
     params->Memory.Regions     = g_MemoryRegions;
+
 }
