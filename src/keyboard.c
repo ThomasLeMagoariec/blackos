@@ -12,6 +12,7 @@ volatile int kb_head = 0;
 volatile int kb_tail = 0;
 
 int shift_pressed = 0;
+uint8_t kb_enabled = 1;
 
 char keymap_azerty[128] = {
     0, 27, '&', 0,'"','\'','(','-','_','_', 0, 0,')','=','\b',
@@ -66,6 +67,22 @@ char* kb_get_buffer() {
 
 uint8_t kb_get_size() {
     return kb_buf;
+}
+
+void kb_disable() {
+    kb_enabled = 0;
+}
+
+void kb_enable() {
+    kb_enabled = 1;
+}
+
+void kb_toggle() {
+    kb_enabled = !kb_enabled;
+}
+
+uint8_t kb_state() {
+    return kb_enabled;
 }
 
 void kb_handle_scancode(uint8_t scancode) {
