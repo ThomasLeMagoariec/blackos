@@ -12,15 +12,6 @@ void shell_handle_echo() {
     }
 }
 
-void shell_handle_kbtest() {
-    printf("disabling keyboard ...\t");
-    kb_disable();
-    printf("%s", kb_state() ? "ENABLED\n" : "DISABLED\n");
-    printf("enabling keyboard ... \t");
-    kb_enable();
-    printf("%s", kb_state() ? "ENABLED" : "DISABLED");
-}
-
 void shell_add_command_word(const char* word_str, uint8_t len_word) {
     if (g_NumWords < 16) {
         uint8_t copy_len = (len_word < 255) ? len_word : 255;
@@ -60,8 +51,6 @@ void shell_handle_input() {
 
     if (memcmp(g_CurrentCommand[0], "echo", 4) == 0) {
         shell_handle_echo();
-    } else if (memcmp(g_CurrentCommand[0], "kbtest", 6) == 0) { 
-        shell_handle_kbtest();
     } else {
         printf("UNDEFINED\n");
     }

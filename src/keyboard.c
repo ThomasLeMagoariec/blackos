@@ -12,7 +12,6 @@ volatile int kb_head = 0;
 volatile int kb_tail = 0;
 
 int shift_pressed = 0;
-uint8_t kb_enabled = 1;
 
 char keymap_azerty[128] = {
     0, 27, '&', 0,'"','\'','(','-','_','_', 0, 0,')','=','\b',
@@ -69,22 +68,6 @@ uint8_t kb_get_size() {
     return kb_buf;
 }
 
-void kb_disable() {
-    kb_enabled = 0;
-}
-
-void kb_enable() {
-    kb_enabled = 1;
-}
-
-void kb_toggle() {
-    kb_enabled = !kb_enabled;
-}
-
-uint8_t kb_state() {
-    return kb_enabled;
-}
-
 void kb_handle_scancode(uint8_t scancode) {
     int released = scancode & 0x80;
     uint8_t make = scancode & 0x7F;
@@ -115,8 +98,6 @@ void kb_handle_scancode(uint8_t scancode) {
 
 
 void kb_enqueue_key(uint8_t scancode) {
-    if (!kb_enabled) return;
-
     int next = (kb_head + 1) % MAX_KB_SIZE;
     if(next != kb_tail) { // buffer not full
         kbd_buffer[kb_head] = scancode;
