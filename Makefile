@@ -27,13 +27,14 @@ all: $(ISO)
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
+# Compile C source files
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
+	gcc $(CFLAGS) -c $< -o $@
+
 # Compile C++ source files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp | $(BUILD_DIR)
 	g++ $(CXXFLAGS) -c $< -o $@
 
-# Compile C source files
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
-	gcc $(CFLAGS) -c $< -o $@
 
 # Compile ASM source files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.asm | $(BUILD_DIR)

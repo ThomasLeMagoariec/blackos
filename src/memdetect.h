@@ -4,6 +4,11 @@
 #include <stdint.h>
 #include "stdio.h"
 
+#ifdef __cplusplus
+    extern "C" {
+#endif
+
+
 #define MULTIBOOT_INFO_MEM_MAP 0x40
 
 struct multiboot_mmap_entry {
@@ -45,5 +50,10 @@ typedef struct {
 int count_memory_regions(struct multiboot_info* mbi);
 void init_memory_info(struct multiboot_info* mbi, BootParams* params);
 void print_memmap();
+
+#ifdef __cplusplus
+    }
+#endif
+
 
 #endif /* MEMDETECH_H */

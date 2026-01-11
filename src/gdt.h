@@ -3,6 +3,10 @@
 #include "stdio.h"
 #include "dbg_stdio.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define i686_GDT_CODE_SEGMENT 0x8
 #define i686_GDT_DATA_SEGMENT 0x10
 
@@ -69,4 +73,9 @@ typedef enum {
 //void __attribute__((cdecl)) _i686_GDT_Load(GDTDescriptor* descriptor, uint16_t codeSegemnt, uint16_t dataSegment);
 extern void i686_GDT_Load(GDTDescriptor* descriptor, uint16_t codeSegemnt, uint16_t dataSegment);
 void i686_GDT_Initialize();
+
+
+#ifdef __cplusplus
+}
+#endif
 

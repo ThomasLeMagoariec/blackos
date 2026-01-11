@@ -4,6 +4,11 @@
 #include <stdint.h>
 #include "stdio.h"
 
+#ifdef __cplusplus
+    extern "C" {
+#endif
+
+
 #define MAX_KB_SIZE 256
 
 // kb map
@@ -22,5 +27,10 @@ void kb_disable();
 void kb_enable();
 void kb_toggle();
 uint8_t kb_state();
+
+#ifdef __cplusplus
+    }
+#endif
+
 
 #endif

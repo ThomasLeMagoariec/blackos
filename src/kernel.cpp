@@ -1,4 +1,4 @@
-#include "kernel.h"
+#include "kernel.hpp"
 #include "irq.h"
 
 BootParams* g_BootParams;
