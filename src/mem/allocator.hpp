@@ -17,6 +17,22 @@ struct Region {
     RegionType Type;
 };
 
+struct RegionBlocks {
+    uint64_t Base;
+    uint64_t Size;
+    RegionType Type;
+};
+
+class RegionCompare {
+public:
+    bool operator()(const RegionBlocks& a, const RegionBlocks& b) {
+        if (a.Base == b.Base) return a.Size < b.Size;
+        
+        return a.Base < b.Base;
+    }
+};
+
+
 class Allocator {
 public:
     Allocator();
@@ -26,6 +42,8 @@ public:
     virtual void Free(void* base, uint32_t blocks) = 0;
 
 protected:
+    virtual bool InitializeImpl(RegionBlocks regions[], size_t regionCount) = 0;
+
     template<typename TPtr>
     inline uint64_t ToBlock(TPtr ptr) {
         uint8_t* u8Ptr = reinterpret_cast<uint8_t*>(ptr);
@@ -42,6 +60,10 @@ protected:
         uint8_t* u8Ptr = m_MemBase + block * m_BlockSize;
         return reinterpret_cast<void *>(u8Ptr);
     }
+
+private:
+    void DetermineMemoryRange(const Region regions[], size_t regionCount);
+    static void FixOverlappingRegions(RegionBlocks regions[], size_t& regionCount);
 
 protected:
     uint64_t m_BlockSize;

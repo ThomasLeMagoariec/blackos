@@ -23,6 +23,7 @@ void irq_keyboard(Registers* regs) {
 void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     init_memory_info(mbi, g_BootParams);
 
+    Allocator alloc;
 
     HAL_Initialize();
 
