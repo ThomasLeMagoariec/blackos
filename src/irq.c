@@ -29,7 +29,7 @@ void i686_IRQ_Handler(Registers* regs)
     }
     else
     {
-        printf("Unhandled IRQ %d  ISR=%x  IRR=%x  BUFF=%x\n", irq, pic_isr, pic_irr, g_Buff);
+        printf("Unhandled IRQ=%d  ISR=%x  IRR=%x  BUFF=%x\n", irq, pic_isr, pic_irr, g_Buff);
     }
 
     // send EOI

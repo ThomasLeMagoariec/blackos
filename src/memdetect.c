@@ -16,6 +16,10 @@ void print_memmap() {
     }
 }
 
+MemoryRegion* memdetect_getMemRegions() {
+    return g_MemoryRegions;
+}
+
 int count_memory_regions(struct multiboot_info* mbi) {
     int count = 0;
 

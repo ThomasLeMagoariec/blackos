@@ -1,65 +1,74 @@
 #pragma once
-
 #include <stdint.h>
+#include <stddef.h>
 #include "../math/math.hpp"
+#include "../stdio.h"
+#include "../dbg_stdio.h"
 
-
-enum class RegionType {
+enum class RegionType
+{
     Free,
-    Rserved,
+    Reserved,
     Unmapped,
     Allocator,
 };
 
-struct Region {
-    void* Base;
+using ptr_t = void*;
+
+/**
+ * Represents a memory region
+ */
+struct Region
+{
+    ptr_t Base;
     uint64_t Size;
     RegionType Type;
 };
 
-struct RegionBlocks {
+/**
+ * Same as Region, but 'Base' and 'Size' are measured in "blocks"
+ */
+struct RegionBlocks
+{
     uint64_t Base;
     uint64_t Size;
     RegionType Type;
 };
 
-class RegionCompare {
-public:
-    bool operator()(const RegionBlocks& a, const RegionBlocks& b) {
-        if (a.Base == b.Base) return a.Size < b.Size;
-        
-        return a.Base < b.Base;
-    }
-};
+void* memset(void* s, int c, size_t n);
 
-
-class Allocator {
+class Allocator
+{
 public:
     Allocator();
     bool Initialize(uint64_t blockSize, const Region regions[], size_t regionCount);
-
-    virtual void* Allocate(uint32_t blocks = 1) = 0;
-    virtual void Free(void* base, uint32_t blocks) = 0;
+    virtual ptr_t Allocate(uint32_t blocks = 1) = 0;
+    virtual void Free(ptr_t base, uint32_t blocks) = 0;
+    
+    // for statistics
 
 protected:
-    virtual bool InitializeImpl(RegionBlocks regions[], size_t regionCount) = 0;
-
     template<typename TPtr>
-    inline uint64_t ToBlock(TPtr ptr) {
-        uint8_t* u8Ptr = reinterpret_cast<uint8_t*>(ptr);
+    inline uint64_t ToBlock(TPtr ptr)
+    {
+        auto* u8Ptr = reinterpret_cast<uint8_t*>(ptr);
         return (u8Ptr - m_MemBase) / m_BlockSize;
     }
 
     template<typename TPtr>
-    inline uint64_t ToBlockRoundUp(TPtr ptr) {
-        uint8_t* u8Ptr = reinterpret_cast<uint8_t*>(ptr);
+    inline uint64_t ToBlockRoundUp(TPtr ptr)
+    {
+        auto* u8Ptr = reinterpret_cast<uint8_t*>(ptr);
         return DivRoundUp(static_cast<uint64_t>(u8Ptr - m_MemBase), m_BlockSize);
     }
 
-    inline void* ToPtr(uint64_t block) {
+    inline ptr_t ToPtr(uint64_t block)
+    {
         uint8_t* u8Ptr = m_MemBase + block * m_BlockSize;
-        return reinterpret_cast<void *>(u8Ptr);
+        return reinterpret_cast<ptr_t>(u8Ptr);
     }
+
+    virtual bool InitializeImpl(RegionBlocks regions[], size_t regionCount) = 0;
 
 private:
     void DetermineMemoryRange(const Region regions[], size_t regionCount);

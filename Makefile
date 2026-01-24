@@ -5,8 +5,8 @@ ISO_DIR := $(BUILD_DIR)/iso
 GRUB_DIR := $(ISO_DIR)/boot/grub
 
 # Source files
-CPP_SOURCES := $(wildcard $(SRC_DIR)/*.cpp)
-C_SOURCES := $(wildcard $(SRC_DIR)/*.c)
+CPP_SOURCES := $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/mem/*.cpp) $(wildcard $(SRC_DIR)/math/*.cpp)
+C_SOURCES := $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/mem/*.c)
 ASM_SOURCES := $(wildcard $(SRC_DIR)/*.asm)
 LINKER_SCRIPT := $(SRC_DIR)/linker.ld
 
@@ -26,6 +26,8 @@ all: $(ISO)
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
+	mkdir -p $(BUILD_DIR)/math
+	mkdir -p $(BUILD_DIR)/mem
 
 # Compile C source files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)
@@ -56,7 +58,7 @@ $(ISO): $(KERNEL_BIN)
 	grub-mkrescue -o $(ISO) $(ISO_DIR)
 
 run: $(ISO)
-	qemu-system-i386 -cdrom $(ISO)
+	qemu-system-i386 -cdrom $(ISO) -m 5G -debugcon stdio
 
 clean:
 	rm -rf $(BUILD_DIR)

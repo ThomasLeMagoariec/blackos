@@ -1,6 +1,7 @@
 #ifndef KERNEL_H
 #define KERNEL_H
 
+
 #include "memdetect.h"
 #include "vga.h"
 #include "hal.h"
@@ -8,10 +9,13 @@
 #include "dbg_stdio.h"
 #include "keyboard.h"
 #include "mem/allocator.hpp"
+#include "mem/buddy.hpp"
+#include "new.cpp"
 
 #ifdef __cplusplus
     extern "C" {
 #endif
+
 
 void kernel_main(uint32_t magic, struct multiboot_info* mbi);
 
