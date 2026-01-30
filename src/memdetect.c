@@ -8,8 +8,7 @@ int g_MemRegionCount;
 void print_memmap() {
     for (int i = 0; i < g_MemRegionCount; i++) {
         
-        //printf("MEM: base=0x%llx\tlen=0x%llx\ttype=0x%x\n", e->addr, e->len, e->type);
-        printf("MEM: base=0x%llx\tlen=0x%llx\ttype=0x%x\n",
+        printf("MEM(%d): base=0x%llx\tlen=%llu\ttype=0x%x\n", i,
                 g_MemoryRegions[i].Begin,
                 g_MemoryRegions[i].Length,
                 g_MemoryRegions[i].Type);

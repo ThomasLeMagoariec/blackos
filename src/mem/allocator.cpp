@@ -9,16 +9,12 @@ namespace {
     template<typename T, typename Compare>
     void insertion_sort(T* array, size_t count, Compare comp) {
         for (size_t i = 1; i < count; i++) {
-            printf("ALLOC INIT %llu\n", array[i].Base);
             T key;
             key.Base = array[i].Base;
             key.Size = array[i].Size;
             key.Type = array[i].Type;
-            printf("AFTER ASSIGN\n");
             size_t j = i;
-            printf("SIZE_T %d\n", array[j - 1].Base );
             while (j > 0 && comp(key, array[j - 1])) {
-                printf("WHILE\n");
                 T tmp;
                 tmp.Base = array[j].Base;
                 tmp.Size = array[j].Size;
@@ -30,7 +26,6 @@ namespace {
 
                 --j;
             }
-            printf("after while\n");
             array[j].Base = key.Base;
             array[j].Size = key.Size;
             array[j].Type = key.Type;
@@ -83,13 +78,10 @@ class RegionCompare
 public:
     bool operator()(const RegionBlocks& a, const RegionBlocks& b)
     {
-        printf("REGION COMPARE\n");
         if (a.Base == b.Base) {
-            printf("REGION IF\n");
             return a.Size < b.Size;
         }
 
-        printf("REGION ELSE %d | a: %ul b: %ull\n", a.Base < b.Base, a.Base, b.Base);
         return a.Base < b.Base;
     }
 };
@@ -104,11 +96,14 @@ Allocator::Allocator()
 
 bool Allocator::Initialize(uint64_t blockSize, const Region regions[], size_t regionCount) 
 {
-    if (blockSize == 0)
+    dbg_printf("REGION COUNT: %d\n", regionCount);
+    if (blockSize == 0) {
         return false;
+    }
 
-    if (regionCount == 0)
+    if (regionCount == 0) {
         return false;
+    }
 
     m_BlockSize = blockSize;
     DetermineMemoryRange(regions, regionCount);
@@ -137,11 +132,14 @@ bool Allocator::Initialize(uint64_t blockSize, const Region regions[], size_t re
 
     }
 
+    dbg_printf("REGION COUNT: %d\n", regionCount);
+
     FixOverlappingRegions(tempRegions, regionCount);
-    dbg_printf("AFTER FIX OVERLAPPING\n");
-    bool res = InitializeImpl(tempRegions, regionCount);
-    dbg_printf("AFTER RES\n");
-    return res;
+
+    dbg_printf("REGION COUNT: %d\n", regionCount);
+
+    return InitializeImpl(tempRegions, regionCount);
+    
 }
 
 void Allocator::DetermineMemoryRange(const Region regions[], size_t regionCount)
@@ -167,28 +165,24 @@ void Allocator::DetermineMemoryRange(const Region regions[], size_t regionCount)
 
 void Allocator::FixOverlappingRegions(RegionBlocks regions[], size_t& regionCount)
 {
+    dbg_printf("REGION COUNT: %d\n", regionCount);
     insertion_sort(regions, regionCount, RegionCompare());
-    printf("AFTER INSERTION\n");
+    dbg_printf("REGION COUNT: %d\n", regionCount);
 
     for (size_t i = 0; i < regionCount; i++)
     {
-        printf("BEGIN FOR\n");
         // delete 0 sized regions
         if (regions[i].Size == 0)
         {
-            printf("BEFORE ARRAY DELETE\n");
             ArrayDeleteElement(regions, i, regionCount);
-            printf("AFTER ARRAY DELETE\n");
             --i;
         }
         else if (i < regionCount - 1)
         {
-            dbg_printf("ELSE IF\n");
             // Regions of the same type overlapping/touching? Merge them
             if (regions[i].Type == regions[i+1].Type &&
                 regions[i].Base + regions[i].Size >= regions[i+1].Base)
             {
-                dbg_printf("ELSE IF IF\n");
                 uint64_t end = max(regions[i].Base + regions[i].Size,
                                         regions[i+1].Base + regions[i+1].Size);
                 regions[i].Size = end - regions[i].Base;
@@ -201,7 +195,6 @@ void Allocator::FixOverlappingRegions(RegionBlocks regions[], size_t& regionCoun
             else if (regions[i].Type != regions[i+1].Type &&
                      regions[i].Base + regions[i].Size > regions[i+1].Base)
             {
-                dbg_printf("ELSE IF ELSE IF\n");
                 
 
                 uint64_t overlapSize = regions[i].Base + regions[i].Size -
@@ -240,6 +233,7 @@ void Allocator::FixOverlappingRegions(RegionBlocks regions[], size_t& regionCoun
         }
     }
 
-    dbg_printf("EOF\n");
+    dbg_printf("REGION COUNT: %d\n", regionCount);
+
 }
 

@@ -18,6 +18,7 @@ public:
 
 protected:
     bool InitializeImpl(RegionBlocks regions[], size_t regionCount) override;
+    void GetMemMap(Region regions[], size_t regionCount);
 
 private:
     uint64_t FindFreeBlock(int& layer);

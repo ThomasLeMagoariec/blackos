@@ -10,7 +10,6 @@
 #include "keyboard.h"
 #include "mem/allocator.hpp"
 #include "mem/buddy.hpp"
-#include "new.cpp"
 
 #ifdef __cplusplus
     extern "C" {

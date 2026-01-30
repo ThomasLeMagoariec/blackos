@@ -58,7 +58,7 @@ $(ISO): $(KERNEL_BIN)
 	grub-mkrescue -o $(ISO) $(ISO_DIR)
 
 run: $(ISO)
-	qemu-system-i386 -cdrom $(ISO) -m 5G -debugcon stdio
+	qemu-system-i386 -cdrom $(ISO) -m 4G -debugcon stdio
 
 clean:
 	rm -rf $(BUILD_DIR)

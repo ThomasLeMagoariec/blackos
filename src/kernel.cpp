@@ -58,17 +58,16 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     for (int i = 0; i < region_count; i++) {
         new_regions[i].Base = (void*)regions[i].Begin;
         new_regions[i].Size = regions[i].Length;
-        new_regions[i].Type = (RegionType)regions[i].Type;
+        new_regions[i].Type = (RegionType)(regions[i].Type-1);
 
-        printf("region: %d, base: %p, size: %llu, type: %d\n", i, new_regions[i].Base, new_regions[i].Size, new_regions[i].Type);
+        printf("region: %d, base: %p, size: 0x%llx, type: %d\n", i, new_regions[i].Base, new_regions[i].Size, new_regions[i].Type);
     }
     /*
     gAllocator = &kernelAllocator;
     gAllocator->Initialize(4096, new_regions, region_count);
     */
 
-    printf("before if\n");
-
+    dbg_printf("REGION COUNT: %d\n", region_count);
     BuddyAllocator g_Allocator;
     bool res = g_Allocator.Initialize(4096, new_regions, region_count);
 
@@ -96,7 +95,6 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
 
     printf("> ");
 
-    dbg_puts("bite\nZeub");
 
     while (1); // hang
 }
