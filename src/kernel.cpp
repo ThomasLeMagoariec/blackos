@@ -68,15 +68,16 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     */
 
     dbg_printf("REGION COUNT: %d\n", region_count);
-    BuddyAllocator g_Allocator;
+    LinkedListAllocator g_Allocator;
     bool res = g_Allocator.Initialize(4096, new_regions, region_count);
 
     if (!res) {
         printf("Failed to init allocator\n");
     } else {
-        printf("Alloc good");
+        printf("Alloc good\n");
     }
 
+    int *ptr = (int *)g_Allocator.Allocate(20);
 
 
     /*

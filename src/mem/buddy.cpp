@@ -35,23 +35,18 @@ bool BuddyAllocator::InitializeImpl(RegionBlocks regions[], size_t regionCount)
     m_BitmapSize = IndexOfLayer(LAYER_COUNT);
 
 
-    dbg_printf("ENTER REGION LOOP\n");
     // Find free region to fit BitmapSize
     uint64_t biggest = 0;
     RegionBlocks *freeRegion = nullptr;
     for (size_t i = 0; i < regionCount; i++)
     {
-        dbg_printf("LOOP\n");
         if (regions[i].Type == RegionType::Free && regions[i].Size * m_BlockSize >= m_BitmapSize) {
-            dbg_printf("FOUND A REGION\n");
             freeRegion = &regions[i];
         }
 
         if (regions[i].Type == RegionType::Free) {
-            dbg_printf("FOUND FREE REGION\n");
             if (regions[i].Size * m_BlockSize >= m_BitmapSize) {
                 freeRegion = &regions[i];
-                dbg_printf("FOUND A REGION THAT WORKS\n");
             } else {
                 dbg_printf("size was: %llu but needed: %llu diff: %llu\n", regions[i].Size * m_BlockSize, m_BitmapSize, m_BitmapSize - regions[i].Size * m_BlockSize);
             }
