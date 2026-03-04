@@ -78,23 +78,20 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     }
 
     int *ptr = (int *)g_Allocator.Allocate(20);
+
+    for (int i = 0; i < 20; ++i)
+        ptr[i] = i;
+    printf("first element: %d\n", ptr[0]);
+
+    // exercise new-style realloc (no old size parameter)
+    ptr = (int*)g_Allocator.Reallocate(ptr, 40);
     if (ptr) {
-        for (int i = 0; i < 20; ++i)
+        for (int i = 20; i < 40; ++i)
             ptr[i] = i;
-        printf("first element: %d\n", ptr[0]);
-
-        // exercise new-style realloc (no old size parameter)
-        ptr = (int*)g_Allocator.Reallocate(ptr, 40);
-        if (ptr) {
-            for (int i = 20; i < 40; ++i)
-                ptr[i] = i;
-            printf("after grow element 30: %d\n", ptr[30]);
-            ptr = (int*)g_Allocator.Reallocate(ptr, 10);
-            printf("after shrink element 0: %d\n", ptr ? ptr[0] : -1);
-        }
-
-        g_Allocator.Free(ptr);
+        printf("after grow element 30: %d\n", ptr[30]);
     }
+
+    g_Allocator.Free(ptr);
 
 
     /*

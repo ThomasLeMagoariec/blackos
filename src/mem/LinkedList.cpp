@@ -66,6 +66,7 @@ ptr_t LinkedListAllocator::AllocateImpl(uint32_t blocks)
     if (m_PoolUsedElements >= (m_PoolCapacity * 4) / 5)
         GrowPool();
 
+    printf("allocation\n");
     return ret;
 }
 
