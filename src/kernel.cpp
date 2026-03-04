@@ -68,7 +68,7 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     */
 
     dbg_printf("REGION COUNT: %d\n", region_count);
-    LinkedListAllocator g_Allocator;
+    BuddyAllocator g_Allocator;
     bool res = g_Allocator.Initialize(4096, new_regions, region_count);
 
     if (!res) {

@@ -32,7 +32,7 @@ private:
 
     inline uint64_t IndexOfLayer(int layer) const
     {
-        return DivRoundUp(m_BlocksLayer0, BitmapUnit) * ((1ull << layer) - 1);
+        return DivRoundUp(m_BlocksLayer0, (long long unsigned int)BitmapUnit) * ((1ull << layer) - 1);
     }
 
     static inline int GetNearestLayer(int blocks)

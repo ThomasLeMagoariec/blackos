@@ -264,6 +264,16 @@ RegionType LinkedListAllocator::GetState(ptr_t address)
 // for debugging
 
 
+LinkedListRegion* LinkedListAllocator::FindFreeRegion(uint32_t blocks)
+{
+    LinkedListRegion* current = m_First;
+    while (current != nullptr && (current->Type != RegionType::Free || current->Size < blocks))
+        current = current->Next;
+
+    return current;
+}
+
+
 LinkedListRegion* LinkedListAllocatorFirstFit::FindFreeRegion(uint32_t blocks)
 {
     LinkedListRegion* current = m_First;

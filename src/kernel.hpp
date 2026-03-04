@@ -8,8 +8,7 @@
 #include "stdio.h"
 #include "dbg_stdio.h"
 #include "keyboard.h"
-#include "mem/allocator.hpp"
-#include "mem/LinkedList.hpp"
+#include "mem/buddy.hpp"
 
 #ifdef __cplusplus
     extern "C" {
