@@ -11,8 +11,14 @@ class BuddyAllocator : public Allocator
 {
 public:
     BuddyAllocator();
-    void* Allocate(uint32_t blocks = 1) override;
-    void Free(void* base, uint32_t blocks) override;
+    // use base-class wrappers
+    using Allocator::Allocate;
+    using Allocator::Free;
+
+protected:
+    ptr_t AllocateImpl(uint32_t blocks) override;
+    void FreeImpl(ptr_t base, uint32_t blocks) override;
+    ptr_t ReallocateImpl(ptr_t base, uint32_t oldBlocks, uint32_t newBlocks) override;
     
     // for statistics
 

@@ -32,14 +32,21 @@ class LinkedListAllocator : public Allocator
 {
 public:
     LinkedListAllocator();
-    ptr_t Allocate(uint32_t blocks = 1) override;
-    void Free(void* base, uint32_t blocks) override;
+    // use base class wrappers for Allocate/Free/Reallocate
+    using Allocator::Allocate;
+    using Allocator::Free;
+    using Allocator::Reallocate;
 
     // for statistics
     //RegionType GetState(ptr_t address) override;
     
 protected:
     bool InitializeImpl(RegionBlocks regions[], size_t regionCount) override;
+
+    // low-level primitives
+    ptr_t AllocateImpl(uint32_t blocks) override;
+    void FreeImpl(ptr_t base, uint32_t blocks) override;
+    ptr_t ReallocateImpl(ptr_t base, uint32_t oldBlocks, uint32_t newBlocks) override;
 
     LinkedListRegion* FindFreeRegion(uint32_t blocks);
 

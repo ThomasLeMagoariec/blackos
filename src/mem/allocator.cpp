@@ -66,6 +66,120 @@ void* memset(void* s, int c, size_t n)
     return s;
 }
 
+// -----------------------------------------------------------------------------
+// Public allocation wrappers with header metadata
+// -----------------------------------------------------------------------------
+
+ptr_t Allocator::Allocate(uint32_t blocks)
+{
+    if (blocks == 0)
+        return nullptr;
+
+    uint32_t hdrBlocks = HeaderBlocks();
+    ptr_t raw = AllocateImpl(blocks + hdrBlocks);
+    if (raw == nullptr)
+        return nullptr;
+
+    // write header
+    auto* hdr = reinterpret_cast<AllocHeader*>(raw);
+    hdr->blocks = blocks;
+
+    // return pointer past header region
+    uint8_t* user = reinterpret_cast<uint8_t*>(raw) + hdrBlocks * m_BlockSize;
+    return reinterpret_cast<ptr_t>(user);
+}
+
+void Allocator::Free(ptr_t base, uint32_t /*blocks*/)
+{
+    if (base == nullptr)
+        return;
+
+    uint32_t hdrBlocks = HeaderBlocks();
+    uint8_t* raw = reinterpret_cast<uint8_t*>(base) - hdrBlocks * m_BlockSize;
+    auto* hdr = reinterpret_cast<AllocHeader*>(raw);
+    uint32_t stored = hdr->blocks;
+    FreeImpl(reinterpret_cast<ptr_t>(raw), stored + hdrBlocks);
+}
+
+ptr_t Allocator::Reallocate(ptr_t base, uint32_t newBlocks)
+{
+    if (base == nullptr)
+        return Allocate(newBlocks);
+    if (newBlocks == 0) {
+        Free(base);
+        return nullptr;
+    }
+
+    uint32_t hdrBlocks = HeaderBlocks();
+    uint8_t* raw = reinterpret_cast<uint8_t*>(base) - hdrBlocks * m_BlockSize;
+    auto* hdr = reinterpret_cast<AllocHeader*>(raw);
+    uint32_t oldBlocks = hdr->blocks;
+
+    ptr_t newRaw = ReallocateImpl(reinterpret_cast<ptr_t>(raw), oldBlocks + hdrBlocks, newBlocks + hdrBlocks);
+    if (newRaw == nullptr)
+        return nullptr;
+
+    auto* newHdr = reinterpret_cast<AllocHeader*>(newRaw);
+    newHdr->blocks = newBlocks;
+    uint8_t* user = reinterpret_cast<uint8_t*>(newRaw) + hdrBlocks * m_BlockSize;
+    return reinterpret_cast<ptr_t>(user);
+}
+
+// -----------------------------------------------------------------------------
+// Default implementation of the low-level reallocation primitive.  This
+// method is invoked by the public wrapper above and operates on raw block
+// counts that include header space.  Derived allocators may override it to
+// attempt in-place reallocation.
+// -----------------------------------------------------------------------------
+
+ptr_t Allocator::ReallocateImpl(ptr_t base, uint32_t oldBlocks, uint32_t newBlocks)
+{
+    // semantically equivalent to C realloc
+    if (base == nullptr)
+        return AllocateImpl(newBlocks);
+    if (newBlocks == 0) {
+        FreeImpl(base, oldBlocks);
+        return nullptr;
+    }
+    if (oldBlocks == newBlocks)
+        return base;
+
+    ptr_t newPtr = AllocateImpl(newBlocks);
+    if (newPtr == nullptr)
+        return nullptr;
+
+    // copy the smaller of the two sizes
+    uint64_t toCopy = (oldBlocks < newBlocks ? oldBlocks : newBlocks) * m_BlockSize;
+    if (toCopy > 0)
+        memmove(newPtr, base, (size_t)toCopy);
+
+    FreeImpl(base, oldBlocks);
+    return newPtr;
+}
+
+// -----------------------------------------------------------------------------
+// Runtime helpers introduced by the compiler when C/C++ code uses certain
+// operations.  We provide simple implementations here so that the linker
+// doesn't pull in libgcc/libssp (which aren't available in our freestanding
+// environment).  Placing them in allocator.cpp keeps our changes within the
+// allowed files per the user's request.
+
+extern "C" {
+    unsigned long long __udivmoddi4(unsigned long long a,
+                                    unsigned long long b,
+                                    unsigned long long *c)
+    {
+        if (c) *c = a % b;
+        return a / b;
+    }
+
+    void __stack_chk_fail(void)
+    {
+        // stack protection failure; halt
+        for (;;) ;
+    }
+}
+
 template <typename T>
 void ArrayDeleteElement(T array[], size_t indexToDelete, size_t& count)
 {

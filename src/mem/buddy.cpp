@@ -84,7 +84,7 @@ bool BuddyAllocator::InitializeImpl(RegionBlocks regions[], size_t regionCount)
     return true;
 }
 
-void* BuddyAllocator::Allocate(uint32_t blocks) 
+ptr_t BuddyAllocator::AllocateImpl(uint32_t blocks) 
 {
     if (blocks == 0)
         return nullptr;
@@ -199,7 +199,7 @@ uint64_t BuddyAllocator::FindFreeBlock(int& layer)
     return (uint64_t)-1;
 }
 
-void BuddyAllocator::Free(void* base, uint32_t blocks)
+void BuddyAllocator::FreeImpl(void* base, uint32_t blocks)
 {
     // figure out closest layer
     if (blocks <= BIG_BLOCK_MULTIPLIER)
@@ -213,6 +213,14 @@ void BuddyAllocator::Free(void* base, uint32_t blocks)
     {
         MarkBlocks(ToBlock(base), blocks, false);
     }
+}
+
+// We don't have a specialized realloc strategy for the buddy allocator; use
+// the default generic algorithm provided by Allocator.
+ptr_t BuddyAllocator::ReallocateImpl(ptr_t base, uint32_t oldBlocks, uint32_t newBlocks)
+{
+    // simply fall back to base implementation
+    return Allocator::ReallocateImpl(base, oldBlocks, newBlocks);
 }
 
 void BuddyAllocator::MarkRegion(void* basePtr, size_t sizeBytes, bool isUsed)
