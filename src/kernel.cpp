@@ -1,7 +1,6 @@
 #include "kernel.hpp"
 #include "irq.h"
-
-BootParams* g_BootParams;
+#include "memory.hpp"
 
 void timer(Registers* regs) {
 
@@ -40,58 +39,24 @@ typedef struct {
 //BuddyAllocator g_Allocator;
 
 void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
-    init_memory_info(mbi, g_BootParams);
-
-    MemoryRegion* regions = memdetect_getMemRegions();
-    int region_count = count_memory_regions(mbi);
-
     HAL_Initialize();
+    mem_ctx ctx = mem_Initialize(mbi);
 
-    Region new_regions[128];
-    if (region_count > 128) {
-        // Handle error: too many memory regions to fit in our temporary array.
-        // For now, we'll just hang or print an error.
-        printf("Error: Exceeded maximum number of memory regions (128).\n");
-        while(1);
-    }
-
-    for (int i = 0; i < region_count; i++) {
-        new_regions[i].Base = (void*)regions[i].Begin;
-        new_regions[i].Size = regions[i].Length;
-        new_regions[i].Type = (RegionType)(regions[i].Type-1);
-
-        printf("region: %d, base: %p, size: 0x%llx, type: %d\n", i, new_regions[i].Base, new_regions[i].Size, new_regions[i].Type);
-    }
-    /*
-    gAllocator = &kernelAllocator;
-    gAllocator->Initialize(4096, new_regions, region_count);
-    */
-
-    dbg_printf("REGION COUNT: %d\n", region_count);
-    LinkedListAllocator g_Allocator;
-    bool res = g_Allocator.Initialize(4096, new_regions, region_count);
-
-    if (!res) {
-        printf("Failed to init allocator\n");
-    } else {
-        printf("Alloc good\n");
-    }
-
-    int *ptr = (int *)g_Allocator.Allocate(20);
+    int *ptr = (int *)malloc(20);
 
     for (int i = 0; i < 20; ++i)
         ptr[i] = i;
     printf("first element: %d\n", ptr[0]);
 
     // exercise new-style realloc (no old size parameter)
-    ptr = (int*)g_Allocator.Reallocate(ptr, 40);
+    ptr = (int*)realloc(ptr, 40);
     if (ptr) {
         for (int i = 20; i < 40; ++i)
             ptr[i] = i;
         printf("after grow element 30: %d\n", ptr[30]);
     }
 
-    g_Allocator.Free(ptr);
+    free(ptr);
 
 
     /*

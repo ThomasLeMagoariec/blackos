@@ -1,8 +1,8 @@
 #include "memory.hpp"
 #include "memdetect.h"
 
-BootParams* g_BootParams;
 LinkedListAllocator* alloc;
+BootParams* g_BootParams;
 
 LinkedListAllocator* get_alloc() {
     return alloc;
@@ -16,7 +16,7 @@ ptr_t realloc(ptr_t base, uint32_t blocks) {
     return alloc->Reallocate(base, blocks);
 }
 
-void free(ptr_t base, uint32_t /*blocks*/) {
+void free(ptr_t base) {
     alloc->Free(base);
 }
 
