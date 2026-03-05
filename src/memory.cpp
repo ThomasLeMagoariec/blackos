@@ -1,6 +1,8 @@
 #include "memory.hpp"
 #include "memdetect.h"
 
+using ptr_t = void*;
+
 LinkedListAllocator* alloc;
 BootParams* g_BootParams;
 
@@ -8,16 +10,18 @@ LinkedListAllocator* get_alloc() {
     return alloc;
 }
 
-ptr_t malloc(uint32_t blocks) {
-    return alloc->Allocate(blocks);
-}
+extern "C" {
+    void* malloc(uint32_t blocks) {
+        return alloc->Allocate(blocks);
+    }
 
-ptr_t realloc(ptr_t base, uint32_t blocks) {
-    return alloc->Reallocate(base, blocks);
-}
+    ptr_t realloc(ptr_t base, uint32_t blocks) {
+        return alloc->Reallocate(base, blocks);
+    }
 
-void free(ptr_t base) {
-    alloc->Free(base);
+    void free(ptr_t base) {
+        alloc->Free(base);
+    }
 }
 
 mem_ctx mem_Initialize(struct multiboot_info* mbi) {

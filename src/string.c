@@ -1,5 +1,7 @@
 #include "string.h"
 
+extern void* malloc(uint32_t blocks);
+
 int memcmp(const void *s1, const void *s2, size_t n) {
     for (size_t i = 0; i < n; i++) {
         size_t delta = *(unsigned char*)s1++ - *(unsigned char*)s2++;
@@ -19,6 +21,15 @@ void* memcpy( void* destination, const void* source, size_t size ) {
     }
 
     return destination;
+}
+
+int strcmp(const char* s1, const char* s2)
+{
+    while (*s1 && *s1 == *s2) {
+        s1++;
+        s2++;
+    }
+    return (unsigned char)*s1 - (unsigned char)*s2;
 }
 
 /* helper to determine if a character is one of the delimiters */
@@ -64,4 +75,20 @@ char* strtok(char* str, const char* delim)
     }
 
     return token_start;
+}
+
+char* strdup(char *src)
+{
+    char *str;
+    char *p;
+    int len = 0;
+
+    while (src[len])
+        len++;
+    str = (char *)malloc(len + 1);
+    p = str;
+    while (*src)
+        *p++ = *src++;
+    *p = '\0';
+    return str;
 }

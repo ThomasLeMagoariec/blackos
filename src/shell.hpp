@@ -15,7 +15,5 @@ typedef struct {
 
 
 void shell_handle_input();
-uint8_t shell_handle_word(char* word, uint8_t len_word);
-void shell_handle_echo();
 
 #endif /* SHELL_H */

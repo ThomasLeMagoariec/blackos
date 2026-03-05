@@ -1,23 +1,21 @@
- #ifndef STRING_H
- #define STRING_H
+#ifndef STRING_H
+#define STRING_H
+
+#include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stddef.h>
-
 int memcmp(const void* s1, const void* s2, size_t n);
 void* memcpy(void* destination, const void* source, size_t size);
-
-/*
- * Tokenize a string into substrings separated by any of the characters in
- * `delim`.  The first call must provide the string to be tokenized; subsequent
- * calls should pass NULL and the function will continue from the previous
- * position.  This implementation is analogous to the standard library
- * `strtok` and is not thread-safe.
- */
+int strcmp(const char* s1, const char* s2);
 char* strtok(char* str, const char* delim);
+char* strdup(char *src);
+
+void* malloc(uint32_t blocks);
+void free(void* ptr);
 
 #ifdef __cplusplus
 }
