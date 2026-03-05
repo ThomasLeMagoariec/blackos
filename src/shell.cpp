@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "shell.hpp"
 #include "keyboard.h"
 
 /*
@@ -34,7 +34,11 @@ void shell_add_command_word(const char* word_str, uint8_t len_word) {
 */
 
 void get_tokens(shell_ctx* ctx, char* str) {
-    ctx->words = 0;
+    ctx->words = (char**)malloc(ctx->capacity * sizeof(char *));
+
+    char* word;
+
+    word = strtok(str, " ");
 }
 
 void shell_handle_input() {

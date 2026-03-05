@@ -20,3 +20,48 @@ void* memcpy( void* destination, const void* source, size_t size ) {
 
     return destination;
 }
+
+/* helper to determine if a character is one of the delimiters */
+static int is_delim(char c, const char* delim)
+{
+    while (*delim) {
+        if (c == *delim++)
+            return 1;
+    }
+    return 0;
+}
+
+char* strtok(char* str, const char* delim)
+{
+    static char* next;
+
+    if (str)
+        next = str;
+
+    if (next == NULL)
+        return NULL;
+
+    /* skip leading delimiters */
+    while (*next && is_delim(*next, delim))
+        next++;
+
+    if (*next == '\0') {
+        next = NULL;
+        return NULL;
+    }
+
+    char* token_start = next;
+
+    /* advance until delimiter or end */
+    while (*next && !is_delim(*next, delim))
+        next++;
+
+    if (*next) {
+        *next = '\0';
+        next++;
+    } else {
+        next = NULL;
+    }
+
+    return token_start;
+}

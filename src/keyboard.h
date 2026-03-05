@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 #include "stdio.h"
+// shell.hpp is C++ code; do not include it here so that C files can
+// compile without pulling in C++ headers.
 
 #ifdef __cplusplus
     extern "C" {
@@ -27,6 +29,10 @@ void kb_disable();
 void kb_enable();
 void kb_toggle();
 uint8_t kb_state();
+
+// forward declaration of shell entrypoint so keyboard.c can invoke it without
+// including the full C++ shell header.
+void shell_handle_input(void);
 
 #ifdef __cplusplus
     }

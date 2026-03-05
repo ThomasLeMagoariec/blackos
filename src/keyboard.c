@@ -1,5 +1,4 @@
 #include "keyboard.h"
-#include "shell.h"
 
 #define keymap          keymap_azerty
 #define keymap_shift    keymap_azerty_shift
