@@ -9,7 +9,7 @@
 #include "dbg_stdio.h"
 #include "keyboard.h"
 #include "mem/buddy.hpp"
-#include "mem/LinkedList.hpp"
+#include "memory.hpp"
 
 #ifdef __cplusplus
     extern "C" {
