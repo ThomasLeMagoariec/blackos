@@ -19,7 +19,6 @@ void echo(shell_ctx* ctx) {
         else                    printf(ctx->words[i]);
     }
 
-    printf("#");
 }
 
 void exec(shell_ctx* ctx) {
