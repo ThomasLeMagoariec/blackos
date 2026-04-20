@@ -1,6 +1,11 @@
 #ifndef VGA_H
 #define VGA_H
 
+
+#ifdef __cplusplus
+    extern "C" {
+#endif
+
 #include <stdint.h>
 
 enum VGA_ERROR {
@@ -49,4 +54,10 @@ enum VGA_ERROR vga_goto(int x, int y);
 enum VGA_ERROR vga_print_c_color(const char c, enum VGA_COLOR fg, enum VGA_COLOR bg);
 
 enum VGA_ERROR vga_print_c(const char c);
+
+
+#ifdef __cplusplus
+    }
+#endif
+
 #endif

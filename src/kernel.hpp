@@ -3,8 +3,8 @@
 
 
 #include "memdetect.h"
-#include "vga.h"
 #include "hal.h"
+#include "vga.h"
 #include "stdio.h"
 #include "dbg_stdio.h"
 #include "keyboard.h"
@@ -14,7 +14,6 @@
 #ifdef __cplusplus
     extern "C" {
 #endif
-
 
 void kernel_main(uint32_t magic, struct multiboot_info* mbi);
 

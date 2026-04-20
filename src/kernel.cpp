@@ -71,9 +71,12 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     i686_IRQ_RegisterHandler(1, irq_keyboard);
     
 
+    vga_initialize();
+
     printf("Hello, World!\n");
 
     printf("> ");
+    vga_print_color("*", RED, RED);
 
 
     while (1); // hang
