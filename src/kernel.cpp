@@ -1,4 +1,5 @@
 #include "kernel.hpp"
+#include "game/game.h"
 #include "irq.h"
 #include "memory.hpp"
 
@@ -77,6 +78,10 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
 
     printf("> ");
     vga_print_color("*", RED, RED);
+
+    game_draw(10, 10, (enum VGA_COLOR)RED);
+    game_fill((enum VGA_COLOR)MAGENTA);
+    game_draw_text(30, 5, (enum VGA_COLOR)RED, "Test.");
 
 
     while (1); // hang

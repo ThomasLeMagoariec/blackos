@@ -10,6 +10,7 @@
 #include "keyboard.h"
 #include "mem/buddy.hpp"
 #include "memory.hpp"
+#include "game/game.h"
 
 #ifdef __cplusplus
     extern "C" {

@@ -6,7 +6,8 @@ GRUB_DIR := $(ISO_DIR)/boot/grub
 
 # Source files
 CPP_SOURCES := $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/mem/*.cpp) $(wildcard $(SRC_DIR)/math/*.cpp)
-C_SOURCES := $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/mem/*.c)
+C_SOURCES := $(wildcard $(SRC_DIR)/*.c) $(wildcard $(SRC_DIR)/mem/*.c) $(wildcard $(SRC_DIR)/game/*.c)
+
 ASM_SOURCES := $(wildcard $(SRC_DIR)/*.asm)
 LINKER_SCRIPT := $(SRC_DIR)/linker.ld
 
@@ -28,6 +29,7 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 	mkdir -p $(BUILD_DIR)/math
 	mkdir -p $(BUILD_DIR)/mem
+	mkdir -p $(BUILD_DIR)/game
 
 # Compile C source files
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c | $(BUILD_DIR)

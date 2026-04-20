@@ -60,3 +60,13 @@ enum VGA_ERROR vga_goto(int x, int y) {
 
     return (enum VGA_ERROR)SUCCESS;
 }
+
+void vga_1d_to2d(int a, int *x, int *y) {
+    *x = (a % 80);
+    *y = (a / 80);
+}
+
+void vga_2d_to1d(int x, int y, int *out) {
+    *out = y * 80 + x;
+}
+

@@ -54,6 +54,8 @@ enum VGA_ERROR vga_goto(int x, int y);
 enum VGA_ERROR vga_print_c_color(const char c, enum VGA_COLOR fg, enum VGA_COLOR bg);
 
 enum VGA_ERROR vga_print_c(const char c);
+void vga_1d_to2d(int a, int *x, int *y);
+void vga_2d_to1d(int x, int y, int *out);
 
 
 #ifdef __cplusplus
