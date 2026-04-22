@@ -1,4 +1,5 @@
 #include "keyboard.h"
+#include "dbg_stdio.h"
 
 #define keymap          keymap_azerty
 #define keymap_shift    keymap_azerty_shift
@@ -12,6 +13,11 @@ volatile int kb_tail = 0;
 
 int shift_pressed = 0;
 uint8_t kb_enabled = 1;
+
+bool mapped = false;
+
+kb_event g_kb_events[256];
+int g_kbEventNum;
 
 char keymap_azerty[128] = {
     0, 27, '&', 0,'"','\'','(','-','_','_', 0, 0,')','=','\b',
@@ -44,6 +50,10 @@ static const char keymap_qwerty_shift[128] = {
 };
 
 char kb_map_scancode(uint8_t scancode) {
+    mapped = true;
+
+    dbg_printf("%x\n", scancode);
+
     char c = shift_pressed ? keymap_shift[scancode] : keymap[scancode];
     if(c >= 'a' && c <= 'z' && shift_pressed) c -= 32; // uppercase
 
@@ -84,7 +94,15 @@ uint8_t kb_state() {
     return kb_enabled;
 }
 
-void kb_handle_scancode(uint8_t scancode) {
+void register_kbevent(int number, kb_event event) {
+    g_kb_events[number] = event;
+    g_kbEventNum++;
+}
+
+void kb_main_event(uint8_t scancode) {
+
+    mapped = false;
+
     int released = scancode & 0x80;
     uint8_t make = scancode & 0x7F;
 
@@ -93,13 +111,6 @@ void kb_handle_scancode(uint8_t scancode) {
         case 0x36: // right shift
             shift_pressed = !released;
             return;
-        case 0x1C: // enter
-            if (!released) {
-                printf("\n");
-                shell_handle_input();
-            }
-
-            return;
         case 0x0E: // backspace
             if (!released) {
                 backspace();
@@ -107,9 +118,24 @@ void kb_handle_scancode(uint8_t scancode) {
                 g_KeyboardBuffer[kb_buf] = '\0';
             }
             return;
+
     }
 
-    if(!released) kb_enqueue_key(make); // only store key presses
+    // if(!released) kb_enqueue_key(make); // only store key presses
+    
+    if (!released && !mapped) {
+        char c = kb_map_scancode(scancode);
+        dbg_printf("else: %x\n", scancode);
+        printf("%c", c);
+    }
+}
+
+void kb_handle_scancode(uint8_t scancode) {
+
+    for (int i = 0; i < g_kbEventNum; i++) {
+        g_kb_events[i](scancode);
+    }
+
 }
 
 

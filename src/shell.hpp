@@ -15,5 +15,6 @@ typedef struct {
 
 
 void shell_handle_input();
+void shell_kb_event(uint8_t scancode);
 
 #endif /* SHELL_H */

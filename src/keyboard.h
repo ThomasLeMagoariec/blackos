@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include "stdio.h"
+#include <stdbool.h>
 // shell.hpp is C++ code; do not include it here so that C files can
 // compile without pulling in C++ headers.
 
@@ -33,6 +34,10 @@ uint8_t kb_state();
 // forward declaration of shell entrypoint so keyboard.c can invoke it without
 // including the full C++ shell header.
 void shell_handle_input(void);
+
+typedef void (*kb_event)(uint8_t);
+void register_kbevent(int number, kb_event event);
+void kb_main_event(uint8_t scancode);
 
 #ifdef __cplusplus
     }

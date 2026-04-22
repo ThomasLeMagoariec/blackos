@@ -12,6 +12,14 @@ void kbtest() {
     printf("%s", kb_state() ? "ENABLED" : "DISABLED");
 }
 
+void shell_kb_event(uint8_t scancode) {
+    int released = scancode & 0x80;
+
+    if (scancode == 0x1C && !released) {
+        printf("\n");
+        shell_handle_input();
+    }
+}
 
 void echo(shell_ctx* ctx) {
     for (int i = 1; i < ctx->count; i++) {

@@ -1,17 +1,19 @@
 #include "kernel.hpp"
 #include "game/game.h"
 #include "irq.h"
+#include "keyboard.h"
 #include "memory.hpp"
+#include "shell.hpp"
+#include "vga.h"
 
 void timer(Registers* regs) {
 
+    /*
     int scancode = kb_dequeue_key();
 
     if (scancode != -1) {
-        char c = kb_map_scancode(scancode);
-        printf("%c", c);
     }
-
+    */
 
 }
 
@@ -70,6 +72,9 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
 
     i686_IRQ_RegisterHandler(0, timer);
     i686_IRQ_RegisterHandler(1, irq_keyboard);
+
+    register_kbevent(0, kb_main_event);
+    register_kbevent(1, shell_kb_event);
     
 
     vga_initialize();
@@ -79,10 +84,19 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     printf("> ");
     vga_print_color("*", RED, RED);
 
+
+    /*
+    game_init();
     game_draw(10, 10, (enum VGA_COLOR)RED);
     game_fill((enum VGA_COLOR)MAGENTA);
     game_draw_text(30, 5, (enum VGA_COLOR)RED, "Test.");
 
+    game_draw_rect(5, 5, 15, 5, 15, 15, 5, 15, (enum VGA_COLOR)BLUE);
+
+    game_draw_circle(40, 20, 3, (enum VGA_COLOR)BLUE);
+    game_draw_circle(46, 20, 3, (enum VGA_COLOR)BLUE);
+    game_draw_rect(42, 7, 44, 7, 44, 20, 42, 20, (enum VGA_COLOR)BLUE);
+    */
 
     while (1); // hang
 }
