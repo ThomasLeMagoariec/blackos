@@ -1,4 +1,5 @@
 #include "shell.hpp"
+#include "dbg_stdio.h"
 #include "keyboard.h"
 #include "string.h"
 
@@ -18,13 +19,19 @@ void shell_kb_event(uint8_t scancode) {
     if (scancode == 0x1C && !released) {
         printf("\n");
         shell_handle_input();
+        return;
+    }
+
+    if (!released) {
+        char c = kb_map_scancode(scancode);
+        printf("%c", c);
     }
 }
 
 void echo(shell_ctx* ctx) {
     for (int i = 1; i < ctx->count; i++) {
         if (i <= ctx->count - 2) printf("%s ", ctx->words[i]);
-        else                    printf(ctx->words[i]);
+        else                     printf(ctx->words[i]);
     }
 
 }
@@ -72,6 +79,7 @@ void shell_handle_input() {
     shell_ctx ctx;
     ctx.capacity = 8;
     ctx.count = 0;
+    ctx.active = true;
 
     get_tokens(&ctx, buffer);
     exec(&ctx);

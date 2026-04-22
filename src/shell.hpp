@@ -8,6 +8,7 @@
 
 
 typedef struct {
+    bool active;
     size_t capacity;
     size_t count;
     char **words;

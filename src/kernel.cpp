@@ -8,38 +8,11 @@
 
 void timer(Registers* regs) {
 
-    /*
-    int scancode = kb_dequeue_key();
-
-    if (scancode != -1) {
-    }
-    */
-
 }
 
 void irq_keyboard(Registers* regs) {
     kb_handle_scancode(i686_IRQ_GetBuffer());
 }
-
-
-/*
-struct Region {
-    void* Base;
-    uint64_t Size;
-    RegionType Type;
-};
-*/
-
-/*
-typedef struct {
-    uint64_t Begin, Length;
-    uint32_t Type;
-    uint32_t ACPI;
-} MemoryRegion;
-*/
-
-//static BuddyAllocator kernelAllocator;
-//BuddyAllocator g_Allocator;
 
 void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     HAL_Initialize();
@@ -51,7 +24,6 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
         ptr[i] = i;
     printf("first element: %d\n", ptr[0]);
 
-    // exercise new-style realloc (no old size parameter)
     ptr = (int*)realloc(ptr, 40);
     if (ptr) {
         for (int i = 20; i < 40; ++i)
@@ -73,8 +45,8 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     i686_IRQ_RegisterHandler(0, timer);
     i686_IRQ_RegisterHandler(1, irq_keyboard);
 
-    register_kbevent(0, kb_main_event);
-    register_kbevent(1, shell_kb_event);
+    register_kbevent(0, shell_kb_event);
+    register_kbevent(1, kb_main_event);
     
 
     vga_initialize();

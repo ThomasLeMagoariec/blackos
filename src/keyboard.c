@@ -52,8 +52,6 @@ static const char keymap_qwerty_shift[128] = {
 char kb_map_scancode(uint8_t scancode) {
     mapped = true;
 
-    dbg_printf("%x\n", scancode);
-
     char c = shift_pressed ? keymap_shift[scancode] : keymap[scancode];
     if(c >= 'a' && c <= 'z' && shift_pressed) c -= 32; // uppercase
 
@@ -122,12 +120,6 @@ void kb_main_event(uint8_t scancode) {
     }
 
     // if(!released) kb_enqueue_key(make); // only store key presses
-    
-    if (!released && !mapped) {
-        char c = kb_map_scancode(scancode);
-        dbg_printf("else: %x\n", scancode);
-        printf("%c", c);
-    }
 }
 
 void kb_handle_scancode(uint8_t scancode) {
