@@ -143,21 +143,5 @@ void kb_handle_scancode(uint8_t scancode) {
     for (int i = 0; i < g_ctx.numHandlers; i++) {
         g_ctx.handlers[i](scancode);
     }
-
 }
 
-
-void kb_enqueue_key(uint8_t scancode) {
-    int next = (kb_head + 1) % MAX_KB_SIZE;
-    if(next != kb_tail) { // buffer not full
-        kbd_buffer[kb_head] = scancode;
-        kb_head = next;
-    }
-}
-
-int kb_dequeue_key() {
-    if(kb_tail == kb_head) return -1; // buffer empty
-    int scancode = kbd_buffer[kb_tail];
-    kb_tail = (kb_tail + 1) % MAX_KB_SIZE;
-    return scancode;
-}
