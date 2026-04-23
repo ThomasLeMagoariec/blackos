@@ -7,7 +7,6 @@
 char g_KeyboardBuffer[MAX_KB_SIZE];
 uint8_t kb_buf;
 
-volatile uint8_t kbd_buffer[MAX_KB_SIZE];
 volatile int kb_head = 0;
 volatile int kb_tail = 0;
 
