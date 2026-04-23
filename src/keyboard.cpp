@@ -66,11 +66,12 @@ char kb_map_scancode(uint8_t scancode) {
     mapped = true;
 
     char c = g_ctx.shift_pressed ? keymap_shift[scancode] : keymap[scancode];
-    if(c >= 'a' && c <= 'z' && g_ctx.shift_pressed) c -= 32; // uppercase
+    if (c >= 'a' && c <= 'z' && g_ctx.shift_pressed) c -= 32; // uppercase
 
-    if (kb_buf < MAX_KB_SIZE)
+    if (kb_buf < MAX_KB_SIZE && c != 0)
       g_KeyboardBuffer[kb_buf++] = c;
 
+    dbg_printf("key: %d\n", c);
     return c;
 }
 
@@ -107,14 +108,14 @@ uint8_t kb_state() {
 
 void register_kbevent(kb_event event) {
     int num = g_ctx.numHandlers == 0 ? 1 : g_ctx.numHandlers;
+
     g_ctx.handlers = (kb_event*)realloc(g_ctx.handlers, sizeof(kb_event) * num);
     g_ctx.handlers[g_ctx.numHandlers] = event;
     g_ctx.numHandlers++;
-    
-
 }
 
 void kb_main_event(uint8_t scancode) {
+
 
     mapped = false;
 
@@ -135,13 +136,11 @@ void kb_main_event(uint8_t scancode) {
             return;
 
     }
-
-    // if(!released) kb_enqueue_key(make); // only store key presses
 }
 
 void kb_handle_scancode(uint8_t scancode) {
 
-    for (int i = 0; i < g_ctx.numHandlers - 1; i++) {
+    for (int i = 0; i < g_ctx.numHandlers; i++) {
         g_ctx.handlers[i](scancode);
     }
 

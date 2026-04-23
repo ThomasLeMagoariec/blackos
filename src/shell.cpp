@@ -21,10 +21,11 @@ void shell_kb_event(uint8_t scancode) {
         shell_handle_input();
         return;
     }
+    //if (scancode == 0x0E) return; // backspace (handled by kb driver directly)
 
     if (!released) {
         char c = kb_map_scancode(scancode);
-        printf("%c", c);
+        if (c != 0) printf("%c", c);
     }
 }
 
