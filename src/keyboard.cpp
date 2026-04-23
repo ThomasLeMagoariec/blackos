@@ -4,8 +4,6 @@
 #define keymap          keymap_azerty
 #define keymap_shift    keymap_azerty_shift
 
-char g_KeyboardBuffer[MAX_KB_SIZE];
-uint8_t kb_buf;
 
 volatile int kb_head = 0;
 volatile int kb_tail = 0;
@@ -67,26 +65,29 @@ char kb_map_scancode(uint8_t scancode) {
     char c = g_ctx.shift_pressed ? keymap_shift[scancode] : keymap[scancode];
     if (c >= 'a' && c <= 'z' && g_ctx.shift_pressed) c -= 32; // uppercase
 
-    if (kb_buf < MAX_KB_SIZE && c != 0)
-      g_KeyboardBuffer[kb_buf++] = c;
+    if (g_ctx.bufferPos < MAX_KB_SIZE && c != 0)
+      g_ctx.buffer[g_ctx.bufferPos++] = c;
 
-    dbg_printf("key: %d\n", c);
+    if (scancode == 0x0E) {
+        dbg_printf("backspace scancode %d\n", c);
+    }
+
     return c;
 }
 
 void kb_clear_buffer() {
     for (uint8_t i = 0; i < 128; i++) {
-        g_KeyboardBuffer[i] = 0;
+        g_ctx.buffer[i] = 0;
     };
-    kb_buf = 0;
+    g_ctx.bufferPos = 0;
 }
 
 char* kb_get_buffer() {
-    return g_KeyboardBuffer;
+    return g_ctx.buffer;
 }
 
 uint8_t kb_get_size() {
-    return kb_buf;
+    return g_ctx.bufferPos;
 }
 
 void kb_disable() {
@@ -128,9 +129,13 @@ void kb_main_event(uint8_t scancode) {
             return;
         case 0x0E: // backspace
             if (!released) {
+                dbg_printf("trigger backsapc\n");
                 backspace();
-                kb_buf--;
-                g_KeyboardBuffer[kb_buf] = '\0';
+
+
+                // no clue why this works
+                g_ctx.bufferPos--;
+                g_ctx.buffer[g_ctx.bufferPos--] = '\0';
             }
             return;
 

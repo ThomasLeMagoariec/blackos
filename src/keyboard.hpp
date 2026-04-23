@@ -21,6 +21,10 @@ typedef void (*kb_event)(uint8_t);
 typedef struct {
     bool enabled;
     bool shift_pressed;
+
+    char buffer[MAX_KB_SIZE];
+    uint8_t bufferPos;
+
     uint8_t numHandlers;
     kb_event* handlers;
 } kb_ctx;

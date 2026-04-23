@@ -25,7 +25,7 @@ void shell_kb_event(uint8_t scancode) {
 
     if (!released) {
         char c = kb_map_scancode(scancode);
-        if (c != 0) printf("%c", c);
+        if (c != 0 && c != 8) printf("%c", c);
     }
 }
 
@@ -75,6 +75,7 @@ void get_tokens(shell_ctx* ctx, char* str) {
 
 void shell_handle_input() {
     char* buffer = kb_get_buffer();
+    dbg_printf("SHELL GOT:%s\n", buffer);
 
     // init context
     shell_ctx ctx;
