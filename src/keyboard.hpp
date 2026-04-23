@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include "stdio.h"
 #include <stdbool.h>
+#include "memory.hpp"
+
 // shell.hpp is C++ code; do not include it here so that C files can
 // compile without pulling in C++ headers.
 
@@ -13,6 +15,17 @@
 
 
 #define MAX_KB_SIZE 256
+
+typedef void (*kb_event)(uint8_t);
+
+typedef struct {
+    bool enabled;
+    bool shift_pressed;
+    uint8_t numHandlers;
+    kb_event* handlers;
+} kb_ctx;
+
+void kb_init();
 
 // kb map
 char kb_map_scancode(uint8_t scancode);
@@ -35,8 +48,7 @@ uint8_t kb_state();
 // including the full C++ shell header.
 void shell_handle_input(void);
 
-typedef void (*kb_event)(uint8_t);
-void register_kbevent(int number, kb_event event);
+void register_kbevent(kb_event event);
 void kb_main_event(uint8_t scancode);
 
 #ifdef __cplusplus

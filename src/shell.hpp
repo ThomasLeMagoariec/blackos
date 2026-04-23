@@ -1,7 +1,7 @@
 #ifndef SHELL_H
 #define SHELL_H
 
-#include "keyboard.h"
+#include "keyboard.hpp"
 #include "string.h"
 #include "memdetect.h"
 #include "memory.hpp"

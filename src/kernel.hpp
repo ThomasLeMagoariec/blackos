@@ -7,7 +7,7 @@
 #include "vga.h"
 #include "stdio.h"
 #include "dbg_stdio.h"
-#include "keyboard.h"
+#include "keyboard.hpp"
 #include "mem/buddy.hpp"
 #include "memory.hpp"
 #include "game/game.h"

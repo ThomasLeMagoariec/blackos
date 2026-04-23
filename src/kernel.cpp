@@ -1,7 +1,7 @@
 #include "kernel.hpp"
 #include "game/game.h"
 #include "irq.h"
-#include "keyboard.h"
+#include "keyboard.hpp"
 #include "memory.hpp"
 #include "shell.hpp"
 #include "vga.h"
@@ -41,12 +41,13 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     */
 
 
+    kb_init();
 
     i686_IRQ_RegisterHandler(0, timer);
     i686_IRQ_RegisterHandler(1, irq_keyboard);
 
-    register_kbevent(0, shell_kb_event);
-    register_kbevent(1, kb_main_event);
+    register_kbevent(shell_kb_event);
+    register_kbevent(kb_main_event);
     
 
     vga_initialize();

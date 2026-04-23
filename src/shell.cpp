@@ -1,6 +1,6 @@
 #include "shell.hpp"
 #include "dbg_stdio.h"
-#include "keyboard.h"
+#include "keyboard.hpp"
 #include "string.h"
 
 

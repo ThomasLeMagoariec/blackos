@@ -1,4 +1,4 @@
-#include "keyboard.h"
+#include "keyboard.hpp"
 #include "dbg_stdio.h"
 
 #define keymap          keymap_azerty
@@ -11,13 +11,15 @@ volatile uint8_t kbd_buffer[MAX_KB_SIZE];
 volatile int kb_head = 0;
 volatile int kb_tail = 0;
 
-int shift_pressed = 0;
-uint8_t kb_enabled = 1;
+//int shift_pressed = 0;
+//uint8_t kb_enabled = 1;
 
 bool mapped = false;
 
 kb_event g_kb_events[256];
 int g_kbEventNum;
+
+kb_ctx g_ctx;
 
 char keymap_azerty[128] = {
     0, 27, '&', 0,'"','\'','(','-','_','_', 0, 0,')','=','\b',
@@ -49,11 +51,22 @@ static const char keymap_qwerty_shift[128] = {
     0, '*', 0, ' '
 };
 
+
+void kb_init() {
+    g_ctx.shift_pressed = false;
+    g_ctx.enabled = true;
+
+    // event handlers
+    g_ctx.numHandlers = 0;
+    //g_ctx.handlers = (kb_event*)malloc(sizeof(kb_event));
+    g_ctx.handlers = NULL;
+}
+
 char kb_map_scancode(uint8_t scancode) {
     mapped = true;
 
-    char c = shift_pressed ? keymap_shift[scancode] : keymap[scancode];
-    if(c >= 'a' && c <= 'z' && shift_pressed) c -= 32; // uppercase
+    char c = g_ctx.shift_pressed ? keymap_shift[scancode] : keymap[scancode];
+    if(c >= 'a' && c <= 'z' && g_ctx.shift_pressed) c -= 32; // uppercase
 
     if (kb_buf < MAX_KB_SIZE)
       g_KeyboardBuffer[kb_buf++] = c;
@@ -77,24 +90,28 @@ uint8_t kb_get_size() {
 }
 
 void kb_disable() {
-    kb_enabled = 0;
+    g_ctx.enabled = 0;
 }
 
 void kb_enable() {
-    kb_enabled = 1;
+    g_ctx.enabled = 1;
 }
 
 void kb_toggle() {
-    kb_enabled = !kb_enabled;
+    g_ctx.enabled = !g_ctx.enabled;
 }
 
 uint8_t kb_state() {
-    return kb_enabled;
+    return g_ctx.enabled;
 }
 
-void register_kbevent(int number, kb_event event) {
-    g_kb_events[number] = event;
-    g_kbEventNum++;
+void register_kbevent(kb_event event) {
+    int num = g_ctx.numHandlers == 0 ? 1 : g_ctx.numHandlers;
+    g_ctx.handlers = (kb_event*)realloc(g_ctx.handlers, sizeof(kb_event) * num);
+    g_ctx.handlers[g_ctx.numHandlers] = event;
+    g_ctx.numHandlers++;
+    
+
 }
 
 void kb_main_event(uint8_t scancode) {
@@ -107,7 +124,7 @@ void kb_main_event(uint8_t scancode) {
     switch(make) {
         case 0x2A: // left shift
         case 0x36: // right shift
-            shift_pressed = !released;
+            g_ctx.shift_pressed = !released;
             return;
         case 0x0E: // backspace
             if (!released) {
@@ -124,8 +141,8 @@ void kb_main_event(uint8_t scancode) {
 
 void kb_handle_scancode(uint8_t scancode) {
 
-    for (int i = 0; i < g_kbEventNum; i++) {
-        g_kb_events[i](scancode);
+    for (int i = 0; i < g_ctx.numHandlers - 1; i++) {
+        g_ctx.handlers[i](scancode);
     }
 
 }
