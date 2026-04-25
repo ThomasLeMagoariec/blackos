@@ -5,6 +5,7 @@
 #include "string.h"
 #include "memdetect.h"
 #include "memory.hpp"
+#include "games/tetris/tetris.h"
 
 
 typedef struct {
@@ -17,5 +18,6 @@ typedef struct {
 
 void shell_handle_input();
 void shell_kb_event(uint8_t scancode);
+
 
 #endif /* SHELL_H */

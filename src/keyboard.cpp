@@ -68,9 +68,6 @@ char kb_map_scancode(uint8_t scancode) {
     if (g_ctx.bufferPos < MAX_KB_SIZE && c != 0)
       g_ctx.buffer[g_ctx.bufferPos++] = c;
 
-    if (scancode == 0x0E) {
-        dbg_printf("backspace scancode %d\n", c);
-    }
 
     return c;
 }
@@ -129,7 +126,6 @@ void kb_main_event(uint8_t scancode) {
             return;
         case 0x0E: // backspace
             if (!released) {
-                dbg_printf("trigger backsapc\n");
                 backspace();
 
 

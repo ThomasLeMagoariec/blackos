@@ -37,16 +37,24 @@ void echo(shell_ctx* ctx) {
 
 }
 
-void exec(shell_ctx* ctx) {
-   if (ctx->count == 0) return; 
+void tetris(shell_ctx* ctx) {
+    ctx->active = false;
+    tetris_init();
+}
 
-   if (strcmp(ctx->words[0], "echo") == 0) {
-       echo(ctx);
-   } else if (strcmp(ctx->words[0], "kbtest") == 0) {
-       kbtest();
-   } else {
+void exec(shell_ctx* ctx) {
+    if (ctx->count == 0) return; 
+
+    if (strcmp(ctx->words[0], "echo") == 0) {
+        echo(ctx);
+    } else if (strcmp(ctx->words[0], "kbtest") == 0) {
+        kbtest(); 
+    } else if (strcmp(ctx->words[0], "tetris") == 0) {
+        tetris(ctx);
+    }
+    else {
         printf("UNKNOWN\n");
-   }
+    }
 }
 
 void get_tokens(shell_ctx* ctx, char* str) {
@@ -75,7 +83,6 @@ void get_tokens(shell_ctx* ctx, char* str) {
 
 void shell_handle_input() {
     char* buffer = kb_get_buffer();
-    dbg_printf("SHELL GOT:%s\n", buffer);
 
     // init context
     shell_ctx ctx;
