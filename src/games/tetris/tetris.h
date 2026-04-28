@@ -3,9 +3,15 @@
 
 #include "../game.h"
 
+
 #ifdef __cplusplus
     extern "C" {
 #endif
+
+typedef struct {
+    enum VGA_COLOR bg;
+} ctx;
+
 
 void tetris_init();
 

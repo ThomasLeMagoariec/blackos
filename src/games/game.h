@@ -6,6 +6,8 @@
 #include "../stdio.h"
 #include "../vga.h"
 
+#define game_draw_text(x, y, color, msg) game_draw_text_bg(x, y, color, (enum VGA_COLOR)BLACK, msg);
+
 /*
  * stuf i probably need:
  * init
@@ -22,7 +24,6 @@
 #endif
 void game_init();
 void game_draw(uint8_t x, uint8_t y, enum VGA_COLOR color);
-void game_draw_shape(char** shape, enum VGA_COLOR color); // some kind of shape format i'll define later
 void game_draw_line(uint8_t startX, uint8_t startY, uint8_t endX, uint8_t endY, enum VGA_COLOR color);
 void game_draw_rect(
         uint8_t x1, uint8_t y1,
@@ -33,7 +34,7 @@ void game_draw_rect(
 );
 void game_draw_circle(uint8_t centerX, uint8_t centerY, uint8_t radius, enum VGA_COLOR color);
 
-void game_draw_text(uint8_t x, uint8_t y, enum VGA_COLOR color, const char* msg);
+void game_draw_text_bg(uint8_t x, uint8_t y, enum VGA_COLOR color, enum VGA_COLOR bg, const char* msg);
 void game_fill(enum VGA_COLOR color);
                                                            
 #ifdef __cplusplus

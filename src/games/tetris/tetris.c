@@ -1,9 +1,13 @@
 #include "tetris.h"
 
+ctx g_tetris;
+
 void tetris_init() {
     game_init();
-    game_draw(10, 10, (enum VGA_COLOR)RED);
-    game_fill((enum VGA_COLOR)MAGENTA);
+
+    g_tetris.bg = (enum VGA_COLOR)BLACK;
+
+    game_fill(g_tetris.bg);
     game_draw_text(30, 5, (enum VGA_COLOR)RED, "Test.");
 
     game_draw_rect(5, 5, 15, 5, 15, 15, 5, 15, (enum VGA_COLOR)BLUE);

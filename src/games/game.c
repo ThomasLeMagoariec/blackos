@@ -20,8 +20,6 @@ void game_fill(enum VGA_COLOR color) {
     }
 }
 
-void game_draw_shape(char **shape, enum VGA_COLOR color);
-
 void game_draw_line(uint8_t startX, uint8_t startY, uint8_t endX, uint8_t endY, enum VGA_COLOR color) {
     if (startX > endX) {
         int tmp = startX;
@@ -112,7 +110,7 @@ void game_draw_circle(uint8_t centerX, uint8_t centerY, uint8_t radius, enum VGA
     }
 }
 
-void game_draw_text(uint8_t x, uint8_t y, enum VGA_COLOR color, const char* msg) {
+void game_draw_text_bg(uint8_t x, uint8_t y, enum VGA_COLOR color, enum VGA_COLOR bg, const char* msg) {
     vga_goto(x, y);
-    vga_print_color(msg, color, (enum VGA_COLOR)BLACK);
+    vga_print_color(msg, color, bg);
 }
