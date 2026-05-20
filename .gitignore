@@ -1,5 +1,6 @@
 .vscode/*
-build/*
+result
+build
 run.sh
 *.err
 .ccls-cache/*
