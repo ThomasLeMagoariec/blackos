@@ -6,3 +6,4 @@ run.sh
 .ccls-cache/*
 TODO.md
 .envrc
+.direnv
