@@ -19,6 +19,7 @@
                 qemu
                 xorriso
                 grub2
+                mtools
             ];
 
             shellHook = ''
@@ -36,6 +37,9 @@
                 gnumake
                 nasm
                 gcc
+                grub2
+                xorriso
+                mtools
             ];
 
             buildPhase = ''
@@ -44,15 +48,19 @@
 
             installPhase = ''
                 mkdir -p $out
+
+                cp build/kernel.iso $out/
                 cp build/kernel.bin $out/
             '';
         };
 
         apps.default = {
-            type = "app"
+            type = "app";
 
             program = toString ( pkgs.writeShellScript "run-os" ''
-                qemu-system-i386 -cdrom $(ISO) -m 6G -debugcon stdio
+                ISO="${self.packages.${system}.default}/kernel.iso"
+
+                exec qemu-system-i386 -cdrom "$ISO" -m 6G -debugcon stdio
             '' );
         };
     }
