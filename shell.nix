@@ -9,7 +9,7 @@ pkgs.mkShell {
     ];
 
     shellHook = ''
-        zsh
+        echo pute
     '';
 }
 
