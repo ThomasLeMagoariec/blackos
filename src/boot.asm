@@ -1,9 +1,9 @@
 BITS 32
-SECTION .multiboot
 
+SECTION .multiboot
 ALIGN 4
     MULTIBOOT_MAGIC     equ 0x1BADB002
-    MULTIBOOT_FLAGS     equ 0x1000003
+    MULTIBOOT_FLAGS     equ 0x00000003
     MULTIBOOT_CHECKSUM  equ -(MULTIBOOT_MAGIC + MULTIBOOT_FLAGS)
 
     dd MULTIBOOT_MAGIC
@@ -16,7 +16,7 @@ extern kernel_main
 
 start:
     cli
-    push ebx        ; multiboot_info*
-    push eax        ; multiboot magic
+    push ebx
+    push eax
     call kernel_main
     hlt

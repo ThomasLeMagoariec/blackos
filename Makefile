@@ -20,8 +20,8 @@ KERNEL_BIN := $(BUILD_DIR)/kernel.bin
 ISO := $(BUILD_DIR)/kernel.iso
 
 # Compiler flags
-CXXFLAGS := -m32 -ffreestanding -nostdlib -fno-pie -fno-pic -fno-exceptions -fno-rtti
-CFLAGS := -m32 -ffreestanding -nostdlib -fno-pie -fno-pic
+CXXFLAGS := -m32 -ffreestanding -nostdlib -fno-pie -fno-pic -fno-exceptions -fno-rtti -mno-sse -mno-sse2 -mno-mmx -msoft-float
+CFLAGS := -m32 -ffreestanding -nostdlib -fno-pie -fno-pic -mno-sse -mno-sse2 -mno-mmx -msoft-float
 LDFLAGS := -m elf_i386 -T $(LINKER_SCRIPT)
 
 all: $(ISO)
@@ -55,6 +55,13 @@ $(ISO): $(KERNEL_BIN)
 	mkdir -p $(GRUB_DIR)
 	cp $(KERNEL_BIN) $(ISO_DIR)/boot/kernel.bin
 	printf '%s\n' \
+	'insmod all_video' \
+	'insmod gfxterm' \
+	'insmod vbe' \
+	'set gfxmode=800x600x24' \
+	'set gfxpayload=800x600x24' \
+	'terminal_output gfxterm' \
+	'set menu_color_normal=green/black' \
 	'menuentry "My Kernel" {' \
 	'    multiboot /boot/kernel.bin' \
 	'    boot' \
@@ -62,7 +69,7 @@ $(ISO): $(KERNEL_BIN)
 	grub-mkrescue -o $(ISO) $(ISO_DIR)
 
 run: $(ISO)
-	qemu-system-i386 -cdrom $(ISO) -m 6G -debugcon stdio
+	qemu-system-i386 -cdrom $(ISO) -m 6G -debugcon stdio -vga vmware
 
 clean:
 	rm -rf $(BUILD_DIR)

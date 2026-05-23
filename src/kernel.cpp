@@ -1,9 +1,11 @@
 #include "kernel.hpp"
+#include "dbg_stdio.h"
 #include "irq.h"
 #include "keyboard.hpp"
 #include "memory.hpp"
 #include "shell.hpp"
 #include "vga.h"
+#include "video.h"
 
 void timer(Registers* regs) {
 
@@ -32,6 +34,10 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
 
     free(ptr);
 
+    if (!(mbi->flags & (1 << 12))) {
+        dbg_printf("no frame buffer mes couilles");
+    }
+
 
     /*
     BuddyAllocator* alloc = new BuddyAllocator();
@@ -53,8 +59,13 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
 
     printf("Hello, World!\n");
 
+    video_init(mbi);
+    video_putpixel(0, 0, 4);
+    fill_screen(mbi, 14);
+
     printf("> ");
-    vga_print_color("*", RED, RED);
+    //vga_print_color("*", RED, RED);
+
 
 
     /*
