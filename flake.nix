@@ -12,14 +12,14 @@
         pkgs = import nixpkgs { inherit system; };
         cross = pkgs.pkgsCross.x86_64-embedded;
     in {
-        devShells.default = pkgs.mkShell {
+        devShells.default = pkgs.mkShellNoCC {
             packages = with pkgs; [
                 gnumake
                 nasm
                 qemu
-                xorriso
                 grub2
                 mtools
+                xorriso
             ];
 
             shellHook = ''
@@ -36,10 +36,9 @@
             nativeBuildInputs = with pkgs; [
                 gnumake
                 nasm
-                gcc
                 grub2
-                xorriso
                 mtools
+                xorriso
             ];
 
             buildPhase = ''
@@ -58,7 +57,10 @@
             type = "app";
 
             program = toString ( pkgs.writeShellScript "run-os" ''
+                set -e 
                 ISO="${self.packages.${system}.default}/kernel.iso"
+
+                echo "using: $ISO"
 
                 exec qemu-system-i386 -cdrom "$ISO" -m 6G -debugcon stdio
             '' );
