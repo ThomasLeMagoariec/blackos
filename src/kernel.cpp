@@ -59,9 +59,11 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
 
     printf("Hello, World!\n");
 
+    /*
     video_init(mbi);
     video_putpixel(0, 0, 4);
     fill_screen(mbi, 14);
+    */
 
     printf("> ");
     //vga_print_color("*", RED, RED);
