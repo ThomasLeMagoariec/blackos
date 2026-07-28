@@ -16,6 +16,8 @@ void dbg_putstr(const char* str);
 void backspace();
 void setcursor(int x, int y);
 
+int vsnprintf(char* buf, uint32_t size, const char* fmt, __builtin_va_list args);
+int snprintf(char* buf, uint32_t size, const char* fmt, ...);
 #ifdef __cplusplus
     }
 #endif
