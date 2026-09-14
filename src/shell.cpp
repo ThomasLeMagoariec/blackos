@@ -1,7 +1,7 @@
 #include "shell.hpp"
-#include "dbg_stdio.h"
 #include "keyboard.hpp"
 #include "string.h"
+#include "io.h"
 
 
 void kbtest() {
@@ -42,6 +42,13 @@ void tetris(shell_ctx* ctx) {
     tetris_init();
 }
 
+void reboot() {
+	uint8_t good = 0x02;
+	while (good & 0x02)
+		good = i686_inb(0x64);
+	i686_outb(0x64, 0xFE);
+}
+
 void exec(shell_ctx* ctx) {
     if (ctx->count == 0) return; 
 
@@ -51,8 +58,9 @@ void exec(shell_ctx* ctx) {
         kbtest(); 
     } else if (strcmp(ctx->words[0], "tetris") == 0) {
         tetris(ctx);
-    }
-    else {
+    } else if (strcmp(ctx->words[0], "reboot") == 0) {
+		reboot();
+	} else {
         printf("UNKNOWN\n");
     }
 }

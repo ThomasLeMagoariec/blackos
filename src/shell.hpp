@@ -16,6 +16,13 @@ typedef struct {
 } shell_ctx;
 
 
+#ifdef __cplusplus
+    extern "C" {
+#endif
+	#include "io.h"
+#ifdef __cplusplus
+    }
+#endif
 void shell_handle_input();
 void shell_kb_event(uint8_t scancode);
 
