@@ -5,11 +5,9 @@
 #include "memory.hpp"
 #include "shell.hpp"
 #include "vga.h"
+#include "time.hpp"
 #include "video.h"
 
-void timer(Registers* regs) {
-
-}
 
 void irq_keyboard(Registers* regs) {
     kb_handle_scancode(i686_IRQ_GetBuffer());
@@ -18,6 +16,7 @@ void irq_keyboard(Registers* regs) {
 void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
     HAL_Initialize();
     mem_ctx ctx = mem_Initialize(mbi);
+	timer_init();
 
     int *ptr = (int *)malloc(20);
 
@@ -48,11 +47,11 @@ void kernel_main(uint32_t magic, struct multiboot_info* mbi) {
 
     kb_init();
 
-    i686_IRQ_RegisterHandler(0, timer);
     i686_IRQ_RegisterHandler(1, irq_keyboard);
 
     register_kbevent(shell_kb_event);
     register_kbevent(kb_main_event);
+	register_timeevent(timer_main_event);
     
 
     vga_initialize();
